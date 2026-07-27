@@ -14,7 +14,7 @@ const content = product.translations[lang];
 let countryCode = Astro.url.searchParams.get('country') || Astro.cookies.get('sumak-country-v2')?.value;
 if (countryCode !== 'EC' && countryCode !== 'US') {
   try {
-    countryCode = getCountryCode(Astro.clientAddress);
+    countryCode = getCountryCode(Astro.clientAddress, Astro.request.headers);
   } catch (e) {
     countryCode = 'US';
   }
