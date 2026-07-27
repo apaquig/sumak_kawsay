@@ -342,9 +342,7 @@ export default function App() {
           <div className="flex items-center gap-3 lg:hidden"><span className="grid size-9 place-items-center rounded-full border-2 border-wine-700" aria-hidden="true"><span className="size-3 rounded-full bg-terracotta-500" /></span><strong className="text-sm">Sumak Kawsay</strong></div>
           <div className="hidden lg:block"><p className="text-[0.66rem] font-extrabold uppercase tracking-[0.12em] text-terracotta-500">{activeTab === 'Configuración' ? 'Administración' : 'Catálogo'}</p><h1 className="mt-1 text-lg font-bold">{activeTab}</h1></div>
           <div className="flex items-center gap-3">
-            <span className={`hidden items-center gap-2 rounded-full px-3 py-1.5 text-xs font-bold sm:inline-flex ${connection === 'online' ? 'bg-andes-700/10 text-andes-700' : connection === 'offline' ? 'bg-amber-100 text-amber-800' : 'bg-charcoal-950/5 text-charcoal-800/60'}`}>
-              {connection === 'online' ? <Wifi size={14} /> : <WifiOff size={14} />}{connection === 'online' ? 'API conectada' : connection === 'offline' ? 'Modo local' : 'Comprobando'}
-            </span>
+
             {/* User avatar in header */}
             {currentUser && (
               <button type="button" onClick={() => setShowProfile(true)} className="flex items-center gap-2 rounded-full border border-charcoal-950/10 px-2 py-1 text-sm transition hover:bg-ivory-100" title="Mi perfil">
