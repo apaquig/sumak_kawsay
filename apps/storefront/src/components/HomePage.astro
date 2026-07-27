@@ -9,7 +9,7 @@ interface Props { lang: Language }
 const { lang } = Astro.props;
 const t = messages[lang];
 const products = (await getPublishedProducts(lang))
-  .filter((product) => (product.reviewsCount || 0) > 0 && (product.rating || 0) >= 4)
+  .filter((product) => (product.rating || 0) >= 4)
   .sort((a, b) => {
     const ratingDiff = (b.rating || 0) - (a.rating || 0);
     if (ratingDiff !== 0) return ratingDiff;
