@@ -217,28 +217,7 @@ export default function ProductEditor({ product, categories = [], onClose, onSav
                 </Field>
               </div>
 
-              <div className="grid gap-4 sm:grid-cols-2">
-                <Field label="Calificación (1.0 - 5.0)" error={fieldErrors['rating']}>
-                  <input
-                    type="number"
-                    step="0.1"
-                    min="1.0"
-                    max="5.0"
-                    className="field-input"
-                    value={draft.rating !== undefined ? draft.rating : ''}
-                    onChange={(e) => setDraft((c) => ({ ...c, rating: parseFloat(e.target.value) || 5.0 }))}
-                  />
-                </Field>
-                <Field label="Número de valoraciones" error={fieldErrors['reviewsCount']}>
-                  <input
-                    type="number"
-                    min="0"
-                    className="field-input"
-                    value={draft.reviewsCount !== undefined ? draft.reviewsCount : ''}
-                    onChange={(e) => setDraft((c) => ({ ...c, reviewsCount: parseInt(e.target.value) || 0 }))}
-                  />
-                </Field>
-              </div>
+
 
               <div className="grid gap-5">
                 <Field label="Nombre" error={fieldErrors[`translations.es.name`]} maxChars={160} currentLength={draft.translations.es.name?.length || 0}><input className="field-input" value={draft.translations.es.name} maxLength={160} onChange={(event) => updateTranslation('name', event.target.value)} /></Field>
