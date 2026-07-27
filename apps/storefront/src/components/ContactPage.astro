@@ -1,0 +1,127 @@
+---
+import type { Language } from '../lib/i18n';
+import ContactForm from './ContactForm';
+
+interface Props { lang: Language }
+const { lang } = Astro.props;
+
+const copy = lang === 'es' ? {
+  eyebrow: 'CONTACTO DIRECTO & PEDIDOS',
+  title: 'Ponte en contacto con Sumak Kawsay',
+  intro: '¿Tienes dudas sobre un diseño, deseas una pieza personalizada o estás interesado en nuestras artesanías? Escríbenos y recibirás respuesta directamente en tu correo.',
+  emailLabel: 'Correo electrónico oficial',
+  emailValue: 'tammy.vcm@gmail.com',
+  locationLabel: 'Ubicación y Origen',
+  locationValue: 'Saraguro, Loja · Ecuador 🇪🇨',
+  timeLabel: 'Tiempo de respuesta',
+  timeValue: 'Habitual en menos de 24 horas',
+  formTitle: 'Envíanos un mensaje',
+  formSubtitle: 'Completa los campos a continuación y tus datos llegarán directamente a nuestro correo.',
+} : {
+  eyebrow: 'DIRECT CONTACT & INQUIRIES',
+  title: 'Get in touch with Sumak Kawsay',
+  intro: 'Have questions about a design, custom artisan requests, or wholesale inquiries? Write to us and your message will go directly to our email.',
+  emailLabel: 'Official Email',
+  emailValue: 'tammy.vcm@gmail.com',
+  locationLabel: 'Location & Origin',
+  locationValue: 'Saraguro, Loja · Ecuador 🇪🇨',
+  timeLabel: 'Response Time',
+  timeValue: 'Usually within 24 hours',
+  formTitle: 'Send us a message',
+  formSubtitle: 'Fill out the form below and your details will be delivered straight to our inbox.',
+};
+---
+
+<!-- Hero Section (Matching standardized size and layout) -->
+<section class="relative isolate min-h-[24rem] sm:min-h-[28rem] flex items-center bg-charcoal-950 text-white py-16 overflow-hidden">
+  <img
+    src="/images/hero-artesana-saraguro.png"
+    alt="Contacto Sumak Kawsay Saraguro"
+    width="1800"
+    height="600"
+    class="absolute inset-0 size-full object-cover object-right sm:object-center opacity-85"
+  />
+  <div class="absolute inset-0 z-0 bg-gradient-to-r from-charcoal-950/95 via-charcoal-950/80 to-charcoal-950/20"></div>
+
+  <div class="page-shell relative z-10 max-w-3xl">
+    <span class="inline-block px-3.5 py-1.5 rounded-full bg-gold-400/20 border border-gold-400/30 text-gold-300 text-xs font-extrabold uppercase tracking-widest mb-4">
+      {copy.eyebrow}
+    </span>
+    <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl text-white leading-tight">
+      {copy.title}
+    </h1>
+    <p class="mt-5 text-base sm:text-lg text-ivory-100/90 leading-relaxed max-w-2xl">
+      {copy.intro}
+    </p>
+  </div>
+</section>
+
+<!-- Contact Form and Details Shell -->
+<main id="contacto" class="page-shell section-space">
+  <div class="grid gap-12 lg:grid-cols-[0.42fr_1fr] items-start">
+    {/* Left Info Panel */}
+    <div class="space-y-6">
+      <div class="rounded-3xl bg-charcoal-950 text-white p-8 border border-charcoal-800 shadow-2xl relative overflow-hidden">
+        <div class="absolute -top-12 -right-12 size-40 rounded-full bg-wine-700/20 blur-3xl pointer-events-none"></div>
+
+        <span class="eyebrow text-gold-400">{lang === 'es' ? 'INFORMACIÓN' : 'INFORMATION'}</span>
+        <h2 class="mt-2 font-display text-3xl text-white leading-tight">
+          {lang === 'es' ? 'Atención Personalizada' : 'Personalized Support'}
+        </h2>
+        <p class="mt-4 text-sm text-ivory-200/80 leading-relaxed">
+          {lang === 'es'
+            ? 'Cada artesanía de mullos es tejida con devoción. Si buscas asesoría en joyas o compras especiales, estamos listos para atenderte.'
+            : 'Every piece of beadwork is crafted with devotion. Reach out for custom orders or guidance.'}
+        </p>
+
+        <div class="mt-8 space-y-6 pt-6 border-t border-charcoal-800">
+          <div class="flex items-start gap-4">
+            <div class="size-10 rounded-xl bg-wine-900 text-gold-300 grid place-items-center shrink-0 border border-gold-400/30">
+              ✉️
+            </div>
+            <div>
+              <strong class="block text-xs font-extrabold uppercase tracking-wider text-gold-400">
+                {copy.emailLabel}
+              </strong>
+              <a
+                href={`mailto:${copy.emailValue}`}
+                class="mt-1 text-base font-bold text-white hover:text-gold-300 transition-colors underline decoration-gold-400/40 underline-offset-4"
+              >
+                {copy.emailValue}
+              </a>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-4">
+            <div class="size-10 rounded-xl bg-wine-900 text-gold-300 grid place-items-center shrink-0 border border-gold-400/30">
+              📍
+            </div>
+            <div>
+              <strong class="block text-xs font-extrabold uppercase tracking-wider text-gold-400">
+                {copy.locationLabel}
+              </strong>
+              <p class="mt-1 text-sm text-ivory-100 font-semibold">{copy.locationValue}</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-4">
+            <div class="size-10 rounded-xl bg-wine-900 text-gold-300 grid place-items-center shrink-0 border border-gold-400/30">
+              ⏱️
+            </div>
+            <div>
+              <strong class="block text-xs font-extrabold uppercase tracking-wider text-gold-400">
+                {copy.timeLabel}
+              </strong>
+              <p class="mt-1 text-sm text-ivory-100">{copy.timeValue}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {/* Right Interactive Contact Form */}
+    <div>
+      <ContactForm client:load lang={lang} />
+    </div>
+  </div>
+</main>

@@ -1,0 +1,133 @@
+---
+import type { Language } from '../lib/i18n';
+
+interface Props { lang: Language }
+const { lang } = Astro.props;
+
+const copy = lang === 'es' ? {
+  eyebrow: 'NUESTRA HISTORIA · SARAGURO',
+  title: 'Un emprendimiento familiar con raíces ancestrales',
+  intro: 'Sumak Kawsay es un emprendimiento familiar de la Familia Vacacela Macas, nacido del amor por nuestras raíces y el deseo de llevar el arte artesanal de Saraguro a cada rincón del mundo.',
+  founderName: 'Familia Vacacela Macas',
+  founderRole: 'Emprendimiento Familiar · Saraguro',
+  founderTag: 'Saraguro, Loja · Ecuador 🇪🇨',
+  p1: 'Somos la Familia Vacacela Macas y llevamos adelante Sumak Kawsay desde Saraguro, Loja, Ecuador.',
+  p2: 'Desde niña crecí rodeada de colores, tradiciones y mujeres artesanas que transformaban pequeños mullos en piezas llenas de identidad. En nuestra familia, el arte del tejido con mullos ha pasado de generación en generación, y cada collar, pulsera y accesorio que elaboramos representa nuestra cultura, nuestra historia y el amor por nuestras raíces.',
+  p3: 'Así nació Sumak Kawsay, un emprendimiento familiar creado para compartir con el mundo la belleza del arte saragurense y, al mismo tiempo, mantener vivas las técnicas que nuestros abuelos nos enseñaron.',
+  p4: 'Detrás de cada pieza existen horas de trabajo en familia, paciencia y dedicación. No creamos solamente artesanías; creamos recuerdos, símbolos de identidad y diseños únicos que conectan el pasado con el presente.',
+  p5: 'Nuestro sueño como familia es que cada persona que lleve una creación de Sumak Kawsay también lleve consigo un pedacito de Saraguro y de la Familia Vacacela Macas.',
+  quote: 'No creamos solamente artesanías; creamos recuerdos, símbolos de identidad y diseños únicos que conectan el pasado con el presente.',
+  originTitle: 'Nuestro punto de partida',
+  originText: 'Sumak Kawsay se construye desde el corazón de Saraguro, Loja, Ecuador, como un emprendimiento de la Familia Vacacela Macas que rescata técnicas ancestrales y garantiza información transparente sobre cada producto.',
+  processTitle: 'Proceso artesanal',
+  processText: 'El trabajo con mullos requiere planificación del patrón, selección de colores, tejido manual y revisión del acabado. Cada pieza documenta la técnica específica y el valor cultural de nuestra tradición familiar.',
+  materialsTitle: 'Materiales y cuidado',
+  materialsText: 'Las piezas se elaboran con mullos de vidrio calibrados y de alta durabilidad. Para su conservación, deben mantenerse secas, libres de químicos y guardadas con delicadeza.',
+  cta: 'Explorar la colección',
+} : {
+  eyebrow: 'OUR STORY · SARAGURO',
+  title: 'A family business with ancestral roots',
+  intro: 'Sumak Kawsay is a family business of the Vacacela Macas Family, born from a love for our roots and a passion to share Saraguro\'s ancestral art with the world.',
+  founderName: 'Vacacela Macas Family',
+  founderRole: 'Family Business · Saraguro',
+  founderTag: 'Saraguro, Loja · Ecuador 🇪🇨',
+  p1: 'We are the Vacacela Macas Family and we run Sumak Kawsay from Saraguro, Loja, Ecuador.',
+  p2: 'Since childhood, I grew up surrounded by vibrant colors, traditions, and artisan women who transformed small glass beads into pieces filled with identity. In our family, the art of beadwork has been passed down through generations, and every necklace, bracelet, and accessory we make represents our culture, our history, and our deep roots.',
+  p3: 'That is how Sumak Kawsay was born—a family business created to share the beauty of Saraguro art with the world while keeping alive techniques our grandparents taught us.',
+  p4: 'Behind every piece lie hours of family work, patience, and dedication. We don\'t just create crafts; we create memories, symbols of identity, and unique designs connecting the past with the present.',
+  p5: 'Our dream as a family is that everyone who wears a Sumak Kawsay creation carries a little piece of Saraguro and the Vacacela Macas Family with them.',
+  quote: 'We don\'t just create crafts; we create memories, symbols of identity, and unique designs connecting the past with the present.',
+  originTitle: 'Our starting point',
+  originText: 'Sumak Kawsay is built from the heart of Saraguro, Loja, Ecuador, as a Vacacela Macas Family venture honoring ancestral beadwork and ensuring authentic, transparent information for every product.',
+  processTitle: 'Craft process',
+  processText: 'Beadwork requires pattern design, color harmony, hand weaving, and meticulous finishing checks. Every piece celebrates our family tradition and cultural value.',
+  materialsTitle: 'Materials and care',
+  materialsText: 'Handcrafted with high-density calibrated glass beads. To keep your jewelry radiant, store dry, away from chemicals, and with care.',
+  cta: 'Explore the collection',
+};
+---
+
+<!-- Hero Section -->
+<section class="relative isolate min-h-[24rem] sm:min-h-[28rem] flex items-center bg-charcoal-950 text-white py-16 overflow-hidden">
+  <img
+    src="/images/hero-familia-saraguro.png"
+    alt="Familia Vacacela Macas — artesanías de Saraguro"
+    width="1800"
+    height="600"
+    class="absolute inset-0 size-full object-cover object-right sm:object-center opacity-85"
+  />
+  <div class="absolute inset-0 z-0 bg-gradient-to-r from-charcoal-950/95 via-charcoal-950/80 to-charcoal-950/20"></div>
+
+  <div class="page-shell relative z-10 max-w-3xl">
+    <span class="inline-block px-3.5 py-1.5 rounded-full bg-gold-400/20 border border-gold-400/30 text-gold-300 text-xs font-extrabold uppercase tracking-widest mb-4">
+      {copy.eyebrow}
+    </span>
+    <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl text-white leading-tight">
+      {copy.title}
+    </h1>
+    <p class="mt-5 text-base sm:text-lg text-ivory-100/90 leading-relaxed max-w-2xl">
+      {copy.intro}
+    </p>
+  </div>
+</section>
+
+<!-- Founder Personal Letter Section -->
+<section class="bg-ivory-50 py-16 lg:py-24 border-b border-charcoal-950/10">
+  <div class="page-shell">
+    <div class="grid gap-12 lg:grid-cols-[0.45fr_1fr] items-center">
+      <!-- Portrait Card -->
+      <div class="relative group">
+        <div class="aspect-[3/4] w-full overflow-hidden rounded-3xl bg-charcoal-900 shadow-2xl">
+          <img
+            src="/images/familia-vacacela-macas.png"
+            alt="Familia Vacacela Macas — Sumak Kawsay"
+            width="800"
+            height="1066"
+            class="size-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
+          />
+        </div>
+        <div class="absolute -bottom-6 left-6 right-6 rounded-2xl bg-charcoal-950/90 p-5 text-white backdrop-blur-md border border-white/10 shadow-xl">
+          <p class="text-xs font-extrabold text-gold-400 tracking-wider uppercase">{copy.founderTag}</p>
+          <h2 class="mt-1 font-display text-xl text-white">{copy.founderName}</h2>
+          <p class="text-xs text-ivory-200/80">{copy.founderRole}</p>
+        </div>
+      </div>
+
+      <!-- Story Content -->
+      <div class="lg:pl-6">
+        <span class="eyebrow">{lang === 'es' ? 'NUESTRA FAMILIA' : 'OUR FAMILY'}</span>
+        <h2 class="mt-2 font-display text-3xl sm:text-4xl text-charcoal-950 leading-tight">
+          {lang === 'es' ? 'Nuestra Historia & Raíces' : 'Our Roots & Heritage'}
+        </h2>
+
+        <div class="mt-8 space-y-5 text-base sm:text-lg leading-relaxed text-charcoal-800">
+          <p class="font-medium text-charcoal-950">{copy.p1}</p>
+          <p>{copy.p2}</p>
+          <p>{copy.p3}</p>
+        </div>
+
+        <!-- Pull Quote -->
+        <blockquote class="my-8 rounded-2xl border-l-4 border-wine-700 bg-wine-50/50 p-6 sm:p-8 italic font-serif text-lg sm:text-xl text-wine-950 shadow-sm">
+          "{copy.quote}"
+        </blockquote>
+
+        <div class="space-y-5 text-base sm:text-lg leading-relaxed text-charcoal-800">
+          <p>{copy.p4}</p>
+          <p class="font-semibold text-wine-900">{copy.p5}</p>
+        </div>
+
+        <div class="mt-10 pt-6 border-t border-charcoal-950/10 flex items-center gap-4">
+          <div class="size-12 rounded-full bg-wine-700 text-white font-display text-xl grid place-items-center font-bold">
+            VM
+          </div>
+          <div>
+            <strong class="block text-base font-bold text-charcoal-950">{copy.founderName}</strong>
+            <small class="text-xs text-charcoal-600 font-semibold">{copy.founderRole}</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+

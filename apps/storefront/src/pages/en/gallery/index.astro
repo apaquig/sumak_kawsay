@@ -1,0 +1,9 @@
+---
+import GalleryPage from '../../../components/GalleryPage.astro';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+
+const description = 'Photo gallery of our presence at artisan fairs, ancestral art exhibitions, and Saraguro glass beadwork.';
+---
+<BaseLayout lang="en" title="Fairs & Exhibitions Gallery | Sumak Kawsay" description={description} canonicalPath="/en/gallery/" alternateEs="/es/galeria/" alternateEn="/en/gallery/">
+  <GalleryPage lang="en" />
+</BaseLayout>

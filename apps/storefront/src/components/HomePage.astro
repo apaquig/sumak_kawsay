@@ -1,0 +1,89 @@
+---
+import { getPublishedProducts } from '../lib/catalog';
+import type { Language } from '../lib/i18n';
+import { messages, paths } from '../lib/i18n';
+import Hero from './Hero.astro';
+import ProductCard from './ProductCard.astro';
+
+interface Props { lang: Language }
+const { lang } = Astro.props;
+const t = messages[lang];
+const products = (await getPublishedProducts(lang))
+  .filter((product) => product.featured)
+  .sort((a, b) => (b.rating || 0) - (a.rating || 0));
+---
+
+<Hero lang={lang} />
+
+<section id="coleccion" class="section-space scroll-mt-20 bg-ivory-50" aria-labelledby="featured-title">
+  <div class="page-shell">
+    <div class="grid gap-7 lg:grid-cols-[1fr_0.7fr] lg:items-end">
+      <div>
+        <p class="eyebrow">{t.collectionEyebrow}</p>
+        <h2 id="featured-title" class="section-title">{t.collectionTitle}</h2>
+      </div>
+      <p class="max-w-xl text-base leading-7 text-charcoal-800/80 lg:justify-self-end">{t.collectionText}</p>
+    </div>
+    <div id="featured-grid" class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {products.map((product, index) => <ProductCard product={product} lang={lang} index={index} />)}
+    </div>
+    <div class="mt-10 text-center">
+      <a class="button-primary" href={paths.shop(lang)}>{t.discover}</a>
+    </div>
+  </div>
+</section>
+
+<script>
+  const STORAGE_SUMMARY_RATINGS = 'sumak_summary_ratings_v1';
+  try {
+    const summaryRaw = localStorage.getItem(STORAGE_SUMMARY_RATINGS);
+    const summary = summaryRaw ? JSON.parse(summaryRaw) : {};
+    const grid = document.getElementById('featured-grid');
+    if (grid) {
+      const items = Array.from(grid.children) as HTMLElement[];
+      items.sort((a, b) => {
+        const idA = a.getAttribute('data-product-id') || '';
+        const idB = b.getAttribute('data-product-id') || '';
+        const ratingA = summary[idA]?.avg ?? parseFloat(a.getAttribute('data-rating') || '0');
+        const ratingB = summary[idB]?.avg ?? parseFloat(b.getAttribute('data-rating') || '0');
+        return ratingB - ratingA;
+      });
+      items.forEach((node) => grid.appendChild(node));
+    }
+  } catch (e) {
+    console.warn('Featured grid rating sort error:', e);
+  }
+</script>
+
+<section class="border-y border-charcoal-950/10 bg-andes-800 text-white">
+  <div class="page-shell grid lg:grid-cols-2">
+    <div class="section-space border-white/15 lg:border-r lg:pr-16">
+      <p class="text-xs font-extrabold uppercase tracking-[0.14em] text-gold-400">Saraguro · Loja · Ecuador</p>
+      <h2 class="mt-5 max-w-[12ch] font-display text-4xl leading-none sm:text-5xl">{t.originTitle}</h2>
+      <p class="mt-6 max-w-xl leading-7 text-ivory-100/80">{t.originText}</p>
+    </div>
+    <div class="section-space lg:pl-16" id="proceso">
+      <p class="text-xs font-extrabold uppercase tracking-[0.14em] text-gold-400">01 — 02</p>
+      <h2 class="mt-5 max-w-[12ch] font-display text-4xl leading-none sm:text-5xl">{t.processTitle}</h2>
+      <p class="mt-6 max-w-xl leading-7 text-ivory-100/80">{t.processText}</p>
+      <a class="mt-7 inline-flex min-h-11 items-center font-bold text-gold-400 underline decoration-2 underline-offset-4 hover:text-white" href={paths.story(lang)}>{t.learnMore}</a>
+    </div>
+  </div>
+</section>
+
+<section class="section-space bg-ivory-100">
+  <div class="page-shell grid gap-8 md:grid-cols-3">
+    <div class="border-l-2 border-terracotta-500 pl-5">
+      <p class="font-display text-3xl">Mullos</p>
+      <p class="mt-2 text-sm leading-6 text-charcoal-800/75">{lang === 'es' ? 'Cuentas pequeñas que permiten construir color y geometría.' : 'Small beads used to build color and geometry.'}</p>
+    </div>
+    <div class="border-l-2 border-gold-400 pl-5">
+      <p class="font-display text-3xl">{lang === 'es' ? 'Trabajo manual' : 'Handwork'}</p>
+      <p class="mt-2 text-sm leading-6 text-charcoal-800/75">{lang === 'es' ? 'Cada composición se forma cuenta por cuenta.' : 'Every composition is formed bead by bead.'}</p>
+    </div>
+    <div class="border-l-2 border-andes-700 pl-5">
+      <p class="font-display text-3xl">{lang === 'es' ? 'Información clara' : 'Clear information'}</p>
+      <p class="mt-2 text-sm leading-6 text-charcoal-800/75">{lang === 'es' ? 'Origen, materiales y cuidados verificables en cada ficha.' : 'Verifiable origin, materials, and care on every page.'}</p>
+    </div>
+  </div>
+</section>

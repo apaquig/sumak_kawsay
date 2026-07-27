@@ -1,0 +1,551 @@
+REQUISITOS VISUALES Y TECNOLÓGICOS OBLIGATORIOS
+
+La página debe sentirse moderna, artística, cultural, premium y visualmente impactante.
+
+Debe utilizar obligatoriamente:
+
+- Astro.js.
+- React para componentes interactivos.
+- TypeScript.
+- Tailwind CSS.
+- Three.js.
+- @react-three/fiber.
+- @react-three/drei.
+- Motion para microanimaciones.
+- MediaPipe para el probador virtual.
+- MongoDB.
+- Cloudinary para imágenes, videos y modelos 3D.
+
+TAILWIND CSS
+
+Utilizar Tailwind CSS como sistema principal de estilos.
+
+Configurar un sistema visual mediante variables y tokens:
+
+- Colores.
+- Tipografías.
+- Espaciados.
+- Sombras.
+- Bordes.
+- Radios.
+- Contenedores.
+- Breakpoints.
+- Duraciones de animación.
+- Estados de interacción.
+
+Paleta sugerida:
+
+- Marfil cálido: fondos principales.
+- Terracota: color de marca.
+- Vino oscuro: llamadas a la acción.
+- Negro carbón: textos.
+- Dorado suave: detalles.
+- Verde andino oscuro: acentos naturales.
+
+No llenar los componentes con clases repetidas. Crear componentes y utilidades reutilizables.
+
+Utilizar las variantes de Tailwind:
+
+- hover:
+- focus-visible:
+- active:
+- disabled:
+- motion-safe:
+- motion-reduce:
+- dark:
+- contrast-more:
+
+Todo el diseño debe ser responsive y mobile-first.
+
+EXPERIENCIA VISUAL LLAMATIVA
+
+Crear una experiencia visual inspirada en:
+
+- Artesanía.
+- Cultura andina.
+- Mullos y cuentas.
+- Texturas textiles.
+- Geometría de Saraguro.
+- Trabajo elaborado a mano.
+
+Los elementos culturales deben utilizarse con respeto y de manera auténtica.
+
+Evitar una decoración genérica que mezcle símbolos de diferentes culturas sin contexto.
+
+HERO PRINCIPAL 3D
+
+Crear un hero visual impactante para la página de inicio.
+
+Concepto:
+
+Un collar artesanal aparece suspendido en el centro de la escena. Pequeñas cuentas de colores se mueven suavemente y se unen para formar el collar. Cuando la pieza está completa, realiza una rotación lenta y elegante.
+
+El fondo debe tener:
+
+- Gradiente marfil y terracota.
+- Iluminación cálida.
+- Sombras suaves.
+- Patrones andinos muy sutiles.
+- Partículas pequeñas con movimiento lento.
+- Profundidad visual.
+
+Texto sugerido:
+
+“Artesanías que cuentan nuestra historia”
+
+Texto secundario:
+
+“Piezas elaboradas a mano, llenas de identidad, color y tradición.”
+
+Botones:
+
+- “Descubrir colección”
+- “Conoce nuestra historia”
+
+La animación debe:
+
+- Reaccionar suavemente al movimiento del cursor.
+- Tener una respuesta moderada al giroscopio en teléfonos compatibles.
+- Detenerse cuando la pestaña no esté visible.
+- Respetar prefers-reduced-motion.
+- Mostrar una imagen estática si WebGL no está disponible.
+- No impedir que el usuario lea o utilice los botones.
+
+ANIMACIONES DE INTERFAZ
+
+Agregar:
+
+- Entrada progresiva de títulos.
+- Aparición escalonada de productos.
+- Movimiento suave de las fotografías.
+- Efecto de profundidad en tarjetas.
+- Transiciones entre páginas.
+- Animaciones sutiles en botones.
+- Indicadores animados de carga.
+- Microinteracciones al agregar favoritos.
+- Parallax ligero en secciones editoriales.
+- Transiciones suaves en el selector de idiomas.
+- Animación al abrir el probador virtual.
+
+No animar todos los elementos simultáneamente.
+
+Todas las animaciones deben respetar:
+
+prefers-reduced-motion: reduce
+
+Cuando el usuario tenga activada la reducción de movimiento:
+
+- Desactivar parallax.
+- Desactivar rotaciones automáticas.
+- Desactivar partículas.
+- Cambiar animaciones por transiciones simples.
+- Mostrar el collar 3D en una posición estática.
+
+VISOR 3D DE PRODUCTOS
+
+Agregar soporte opcional para archivos GLB o glTF.
+
+El administrador debe poder subir:
+
+product.model3d.url
+product.model3d.publicId
+product.model3d.posterUrl
+product.model3d.enabled
+product.model3d.autoRotate
+product.model3d.scale
+product.model3d.rotationX
+product.model3d.rotationY
+product.model3d.rotationZ
+
+Si un producto tiene un modelo 3D:
+
+- Mostrar el botón “Ver en 3D”.
+- Permitir rotar la pieza.
+- Permitir acercar y alejar.
+- Agregar iluminación de estudio.
+- Mostrar sombra de contacto.
+- Permitir restablecer la vista.
+- Ofrecer controles mediante teclado.
+- Proporcionar instrucciones accesibles.
+
+Si no existe modelo 3D:
+
+- Mostrar la galería tradicional.
+- Utilizar un efecto 2.5D ligero con la imagen principal.
+- No mostrar controles 3D vacíos.
+
+Optimizar modelos mediante:
+
+- Formato GLB.
+- Compresión Draco.
+- Texturas comprimidas.
+- Carga diferida.
+- Límite de polígonos.
+- Imagen poster previa a la carga.
+
+Cargar el visor mediante client:visible y dynamic import.
+
+SEO TÉCNICO
+
+Todas las páginas importantes deben ser renderizadas o prerenderizadas por Astro.
+
+El contenido principal no puede depender de JavaScript para aparecer.
+
+Implementar:
+
+- title único.
+- meta description única.
+- canonical.
+- robots.txt.
+- sitemap principal.
+- sitemap de productos.
+- sitemap de imágenes.
+- Open Graph.
+- Twitter Cards.
+- URLs amigables.
+- Breadcrumbs.
+- Etiquetas alt.
+- Anchura y altura explícitas en imágenes.
+- Lazy loading.
+- Optimización de fuentes.
+- Preload solamente de recursos críticos.
+- Páginas 404 y 500 personalizadas.
+- Redirecciones 301 cuando cambie un slug.
+
+Datos estructurados JSON-LD:
+
+- Organization.
+- WebSite.
+- Product.
+- Offer.
+- BreadcrumbList.
+- ItemList.
+- FAQPage, solamente si las preguntas son visibles.
+- LocalBusiness, solamente si existe una ubicación física real.
+
+No inventar:
+
+- Reseñas.
+- Calificaciones.
+- Precios.
+- Disponibilidad.
+- Ubicaciones.
+- Premios.
+- Información de artesanos.
+
+Cada producto debe tener contenido indexable sobre:
+
+- Nombre.
+- Descripción.
+- Materiales.
+- Técnica.
+- Origen.
+- Dimensiones.
+- Colores.
+- Cuidado.
+- Disponibilidad.
+- Historia de la pieza.
+
+GEO: GENERATIVE ENGINE OPTIMIZATION
+
+Optimizar el contenido para motores de búsqueda generativos y asistentes de inteligencia artificial.
+
+Implementar:
+
+- Información directa y fácil de citar.
+- Respuestas breves al comienzo de cada sección.
+- Descripciones claras de cada producto.
+- Preguntas frecuentes reales.
+- Definiciones sobre materiales y técnicas.
+- Información verificable sobre el origen.
+- Perfiles de artesanos, con autorización.
+- Fechas de actualización.
+- Autoría de artículos.
+- Página “Sobre Sumak Kawsay”.
+- Página sobre el proceso artesanal.
+- Página sobre materiales y cuidados.
+- Página de preguntas frecuentes.
+- Información de contacto coherente.
+- Datos estructurados consistentes con el contenido visible.
+
+Crear bloques informativos como:
+
+- ¿Quién elaboró esta pieza?
+- ¿Dónde fue elaborada?
+- ¿Qué materiales utiliza?
+- ¿Qué técnica artesanal se utilizó?
+- ¿Cómo cuidar esta artesanía?
+- ¿Qué hace única a esta pieza?
+- ¿Cuánto mide?
+- ¿Es una pieza única o existen varias unidades?
+
+Crear un archivo llms.txt informativo, pero no presentarlo como garantía de posicionamiento.
+
+Publicar un catálogo JSON público, de solo lectura, con información básica de productos publicados.
+
+Evitar:
+
+- Textos genéricos creados solo para buscadores.
+- Repetición artificial de palabras clave.
+- Información cultural sin verificar.
+- Contenido oculto.
+- Datos estructurados que no coincidan con la página.
+
+TRADUCCIÓN AUTOMÁTICA
+
+Idiomas iniciales:
+
+- Español: es
+- Inglés: en
+
+Idioma predeterminado:
+
+- Español.
+
+Estructura obligatoria:
+
+/es/
+/en/
+
+/es/tienda/
+/en/shop/
+
+/es/producto/{slug}
+/en/product/{slug}
+
+Utilizar el sistema i18n de Astro.
+
+En la primera visita a la raíz “/”:
+
+1. Detectar el idioma mediante Accept-Language.
+2. Revisar la preferencia guardada.
+3. Dirigir a /es/ o /en/.
+4. No volver a cambiar el idioma automáticamente después de que el usuario lo seleccione.
+
+Nunca redirigir una URL localizada hacia otro idioma.
+
+Mostrar siempre un selector de idioma accesible.
+
+Guardar la elección en una cookie funcional o localStorage.
+
+Agregar:
+
+- lang correcto en HTML.
+- hreflang es.
+- hreflang en.
+- hreflang x-default.
+- Canonical por cada idioma.
+- Sitemap con versiones localizadas.
+
+TRADUCCIÓN DE PRODUCTOS
+
+MongoDB debe guardar las traducciones por separado:
+
+translations: {
+  es: {
+    name,
+    shortDescription,
+    description,
+    materials,
+    technique,
+    careInstructions,
+    seoTitle,
+    seoDescription
+  },
+  en: {
+    name,
+    shortDescription,
+    description,
+    materials,
+    technique,
+    careInstructions,
+    seoTitle,
+    seoDescription
+  }
+}
+
+Agregar:
+
+translationStatus: {
+  es: "approved",
+  en: "pending" | "machine-translated" | "approved"
+}
+
+Cuando se cree o actualice un producto:
+
+1. Guardar primero el contenido original en español.
+2. Generar automáticamente un borrador en inglés.
+3. Marcarlo como machine-translated.
+4. Mostrarlo en el administrador para revisión.
+5. Permitir editarlo manualmente.
+6. Publicarlo en inglés solamente cuando esté aprobado.
+
+No indexar una traducción pendiente o incompleta.
+
+TRADUCTOR SIN SERVICIO DE PAGO
+
+Crear una interfaz TranslationProvider.
+
+Implementación inicial:
+
+- LibreTranslate autohospedado.
+- Ejecutarlo mediante Docker.
+- Invocarlo solamente desde el backend.
+- No exponer directamente el servicio al navegador.
+- Guardar el resultado en MongoDB.
+- No traducir el contenido en cada visita.
+
+Agregar un glosario protegido para términos que no deben traducirse automáticamente:
+
+- Sumak Kawsay.
+- Saraguro.
+- Loja.
+- Nombres de comunidades.
+- Nombres propios.
+- Nombres de artesanos.
+- Técnicas tradicionales.
+- Palabras en kichwa.
+- Nombres de colecciones.
+
+Agregar un botón:
+
+“Regenerar traducción automática”
+
+y otro:
+
+“Aprobar traducción”
+
+La traducción automática debe considerarse un borrador y siempre debe poder corregirse.
+
+DISEÑO INCLUSIVO Y ACCESIBLE
+
+Cumplir como objetivo con WCAG 2.2 nivel AA.
+
+La experiencia debe funcionar para:
+
+- Personas que utilizan teclado.
+- Lectores de pantalla.
+- Personas con baja visión.
+- Personas con daltonismo.
+- Personas sensibles al movimiento.
+- Personas que necesitan mayor tamaño de texto.
+- Usuarios con conexiones lentas.
+- Dispositivos de gama baja.
+- Usuarios que no autorizan la cámara.
+
+Implementar:
+
+- Enlace “Saltar al contenido”.
+- Jerarquía correcta de encabezados.
+- Regiones semánticas.
+- Texto alternativo descriptivo.
+- Etiquetas en formularios.
+- Mensajes de error claros.
+- Estados de foco visibles.
+- Contraste AA.
+- Botones táctiles de al menos 44 × 44 píxeles.
+- Navegación completa mediante teclado.
+- aria-live para mensajes importantes.
+- focus trap en modales.
+- Restauración del foco al cerrar modales.
+- Subtítulos y transcripción para videos.
+- Controles para pausar animaciones.
+- Zoom de texto sin romper el diseño.
+- Mensajes que no dependan únicamente del color.
+- Lenguaje claro, respetuoso e inclusivo.
+
+No asumir:
+
+- Género.
+- Edad.
+- Tipo de cuerpo.
+- Nacionalidad.
+- Capacidad física.
+- Conocimiento tecnológico.
+
+PROBADOR VIRTUAL INCLUSIVO
+
+El probador seguirá habilitado solamente para productos con:
+
+category.slug === "collares"
+&& virtualTryOn.enabled === true
+
+Debe ofrecer:
+
+- Cámara.
+- Subir fotografía.
+- Ajuste automático.
+- Ajuste manual.
+- Instrucciones mediante texto.
+- Mensajes compatibles con lectores de pantalla.
+- Controles mediante teclado.
+- Botones grandes.
+- Alternativa funcional cuando la cámara no esté disponible.
+
+El probador no debe evaluar, comentar ni clasificar la apariencia de la persona.
+
+Solo debe posicionar visualmente el collar.
+
+No utilizar expresiones como:
+
+- “Te hace ver más delgada”.
+- “Mejora tu cuello”.
+- “Corrige tu apariencia”.
+- “Se ve mejor según tu rostro”.
+
+Utilizar mensajes neutrales:
+
+- “Ajusta la posición del collar”.
+- “Cambia el tamaño de la pieza”.
+- “Mueve el collar hasta la posición deseada”.
+
+RENDIMIENTO
+
+Establecer como objetivos:
+
+- LCP inferior a 2.5 segundos.
+- INP inferior a 200 milisegundos.
+- CLS inferior a 0.1.
+- Lighthouse Performance superior a 90.
+- Lighthouse Accessibility superior a 95.
+- Lighthouse SEO superior a 95.
+
+La escena 3D no debe formar parte del contenido crítico inicial.
+
+Mostrar primero:
+
+- Fondo.
+- Texto.
+- Botones.
+- Imagen poster.
+
+Después cargar:
+
+- Three.js.
+- Modelo 3D.
+- Texturas.
+- Partículas.
+
+No cargar simultáneamente el hero 3D, el visor 3D y MediaPipe.
+
+MediaPipe debe cargarse solamente cuando el usuario abra el probador virtual.
+
+PRUEBAS
+
+Comprobar:
+
+1. Tailwind CSS funciona en todas las páginas.
+2. El sitio funciona sin animaciones.
+3. El contenido principal aparece sin JavaScript.
+4. Las rutas /es/ y /en/ son indexables.
+5. hreflang y canonical son correctos.
+6. La traducción automática puede revisarse.
+7. Los términos culturales protegidos no se traducen.
+8. La escena 3D tiene fallback estático.
+9. El sitio funciona sin WebGL.
+10. El sitio funciona solamente con teclado.
+11. El probador aparece únicamente en Collares.
+12. Las fotografías del probador no salen del dispositivo.
+13. Las animaciones respetan prefers-reduced-motion.
+14. Los modelos 3D no perjudican el contenido principal.
+15. Los datos estructurados coinciden con el contenido visible.

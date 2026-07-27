@@ -1,0 +1,9 @@
+---
+import ContactPage from '../../../components/ContactPage.astro';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+
+const description = 'Get in touch with Sumak Kawsay. Send your artisan inquiries or custom orders directly to tammy.vcm@gmail.com.';
+---
+<BaseLayout lang="en" title="Contact | Sumak Kawsay" description={description} canonicalPath="/en/contact/" alternateEs="/es/contacto/" alternateEn="/en/contact/">
+  <ContactPage lang="en" />
+</BaseLayout>

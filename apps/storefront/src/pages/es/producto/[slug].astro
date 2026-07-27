@@ -1,0 +1,46 @@
+---
+import ProductPage from '../../../components/ProductPage.astro';
+import type { Product } from '../../../data/products';
+import { getProductBySlug } from '../../../lib/catalog';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+
+// Sin prerender: la ficha se arma en cada visita con lo que hay en Mongo,
+// de modo que un cambio en el panel se ve sin volver a compilar.
+export const prerender = false;
+
+const { slug } = Astro.params;
+const product: Product | undefined = slug ? await getProductBySlug(slug, 'es') : undefined;
+
+if (!product) {
+  Astro.response.status = 404;
+  return Astro.rewrite('/404');
+}
+
+// El catálogo cambia poco: se puede cachear un minuto en el CDN.
+Astro.response.headers.set('Cache-Control', 'public, max-age=60, stale-while-revalidate=300');
+const content = product.translations.es;
+const productSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: content.name,
+  description: content.description,
+  image: new URL(product.image.url, Astro.site),
+  sku: product.id,
+  category: product.category.label.es,
+  material: content.materials,
+  countryOfOrigin: 'EC',
+};
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Inicio', item: new URL('/es/', Astro.site) },
+    { '@type': 'ListItem', position: 2, name: 'Colección', item: new URL('/es/tienda/', Astro.site) },
+    { '@type': 'ListItem', position: 3, name: content.name },
+  ],
+};
+---
+
+<BaseLayout lang="es" title={content.seoTitle} description={content.seoDescription} canonicalPath={`/es/producto/${product.slug}/`} alternateEs={`/es/producto/${product.slug}/`} alternateEn={`/en/product/${product.slug}/`} image={product.image.url} schema={[productSchema, breadcrumbSchema]}>
+  <ProductPage lang="es" product={product} />
+</BaseLayout>

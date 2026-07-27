@@ -1,0 +1,23 @@
+{
+  "name": "sumak-kawsay",
+  "private": true,
+  "version": "0.1.0",
+  "packageManager": "npm@11.4.2",
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "concurrently -n storefront,admin,api -c green,cyan,yellow \"npm run dev -w @sumak/storefront\" \"npm run dev -w @sumak/admin\" \"npm run dev -w @sumak/api\"",
+    "build": "npm run build --workspaces --if-present",
+    "check": "npm run check --workspaces --if-present",
+    "test:visual": "node scripts/visual-check.cjs",
+    "dev:storefront": "npm run dev -w @sumak/storefront",
+    "dev:admin": "npm run dev -w @sumak/admin",
+    "dev:api": "npm run dev -w @sumak/api"
+  },
+  "devDependencies": {
+    "@sparticuz/chromium": "^149.0.0",
+    "concurrently": "latest",
+    "playwright": "^1.61.1"
+  }
+}

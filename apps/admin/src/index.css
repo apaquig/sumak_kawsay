@@ -1,0 +1,42 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ivory-50: #fffdf8;
+  --color-ivory-100: #f8f0df;
+  --color-ivory-200: #eadcc2;
+  --color-terracotta-500: #a94f35;
+  --color-wine-700: #671f32;
+  --color-wine-800: #481522;
+  --color-charcoal-800: #252321;
+  --color-charcoal-950: #11100f;
+  --color-gold-400: #c8a35f;
+  --color-andes-700: #294f42;
+  --font-sans: Inter, ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  * { box-sizing: border-box; }
+  body { margin: 0; min-width: 320px; background: #f7f7f5; color: var(--color-charcoal-950); font-family: var(--font-sans); }
+  button, input, select, textarea { font: inherit; }
+  :focus-visible { outline: 3px solid var(--color-gold-400); outline-offset: 2px; }
+}
+
+@layer components {
+  .field-label { display: block; margin-bottom: 0.35rem; font-size: 0.75rem; font-weight: 750; color: rgb(37 35 33 / 0.74); }
+  .field-input { min-height: 2.65rem; width: 100%; border: 1px solid rgb(37 35 33 / 0.18); border-radius: 0.35rem; background: white; padding: 0.65rem 0.75rem; font-size: 0.875rem; }
+  .field-input:hover { border-color: rgb(103 31 50 / 0.55); }
+  .field-input:focus { border-color: var(--color-wine-700); outline: 3px solid rgb(200 163 95 / 0.45); }
+  .button-primary { display: inline-flex; min-height: 2.65rem; align-items: center; justify-content: center; gap: 0.5rem; border-radius: 0.35rem; background: var(--color-wine-700); padding: 0.6rem 0.9rem; color: white; font-size: 0.82rem; font-weight: 750; }
+  .button-primary:hover { background: var(--color-wine-800); }
+  .button-outline { display: inline-flex; min-height: 2.65rem; align-items: center; justify-content: center; gap: 0.5rem; border: 1px solid rgb(37 35 33 / 0.18); border-radius: 0.35rem; background: white; padding: 0.6rem 0.9rem; font-size: 0.82rem; font-weight: 750; }
+  .button-outline:hover { border-color: var(--color-wine-700); color: var(--color-wine-700); }
+}
+
+select.field-input {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M8.25 15 12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9' /%3E%3C/svg%3E");
+  background-position: right 0.75rem center;
+  background-repeat: no-repeat;
+  background-size: 1rem;
+  padding-right: 2.5rem;
+}

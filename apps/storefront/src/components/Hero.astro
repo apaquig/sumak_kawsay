@@ -1,0 +1,723 @@
+---
+import type { Language } from '../lib/i18n';
+import { messages, paths } from '../lib/i18n';
+
+interface Props { lang: Language }
+const { lang } = Astro.props;
+const t = messages[lang];
+const content = lang === 'es'
+  ? {
+      tagline: 'SARAGURO · LOJA · ECUADOR',
+      titleTop: 'El Arte',
+      titleMiddle: 'de Saraguro',
+      titleAccent: 'SUMAK KAWSAY',
+      edition: 'Edición Artesanal 2026',
+      imageAlt: 'Artesana de Saraguro elaborando artesanías de mullos de vidrio',
+      originLabel: 'Identidad Andina',
+      originValue: 'Saraguro · Loja, Ecuador',
+      craftLabel: 'Oficio Ancestral',
+      craftValue: 'Tejido manual en mullos',
+      scroll: 'Descubre la Colección',
+    }
+  : {
+      tagline: 'SARAGURO · LOJA · ECUADOR',
+      titleTop: 'The Art of',
+      titleMiddle: 'Saraguro',
+      titleAccent: 'SUMAK KAWSAY',
+      edition: 'Artisan Edition 2026',
+      imageAlt: 'Saraguro artisan handcrafting glass bead jewelry',
+      originLabel: 'Andean Identity',
+      originValue: 'Saraguro · Loja, Ecuador',
+      craftLabel: 'Ancestral Craft',
+      craftValue: 'Handmade Beadwork',
+      scroll: 'Explore Collection',
+    };
+---
+
+<section class="future-hero" aria-labelledby="future-hero-title">
+  <!-- Full Hero Main Background Image -->
+  <img
+    class="future-hero__bg-img"
+    src="/images/hero-artesana.jpg"
+    width="1920"
+    height="1080"
+    alt={content.imageAlt}
+    fetchpriority="high"
+  />
+  <div class="future-hero__bg-overlay" aria-hidden="true"></div>
+
+  <div class="page-shell future-hero__layout">
+    <div class="future-hero__copy">
+      <div class="future-hero__meta">
+        <span class="future-hero__signal" aria-hidden="true"></span>
+        <span>{t.heroEyebrow}</span>
+      </div>
+
+      <h1 id="future-hero-title" class="future-hero__title">
+        <span>{content.titleTop}</span>
+        <span>{content.titleMiddle}</span>
+        <span class="future-hero__title-accent">{content.titleAccent}</span>
+      </h1>
+
+      <p class="future-hero__intro">{t.heroText}</p>
+
+      <div class="future-hero__actions">
+        <a class="future-hero__primary" href={paths.shop(lang)}>
+          <span>{t.discover}</span>
+          <span class="future-hero__arrow" aria-hidden="true">↗</span>
+        </a>
+        <a class="future-hero__secondary" href={paths.story(lang)}>{t.story}</a>
+      </div>
+
+      <dl class="future-hero__facts">
+        <div>
+          <dt>{content.originLabel}</dt>
+          <dd>{content.originValue}</dd>
+        </div>
+        <div>
+          <dt>{content.craftLabel}</dt>
+          <dd>{content.craftValue}</dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+
+  <a class="future-hero__scroll" href="#coleccion">
+    <span class="future-hero__scroll-line" aria-hidden="true"></span>
+    <span>{content.scroll}</span>
+  </a>
+
+  <div class="future-hero__beadline" aria-hidden="true"></div>
+</section>
+
+<style>
+  .future-hero {
+    --hero-ink: #0b0909;
+    --hero-paper: #f8f0df;
+    --hero-muted: #c9bdac;
+    position: relative;
+    isolation: isolate;
+    width: 100%;
+    min-height: calc(100svh - 4.5rem);
+    overflow: hidden;
+    background-color: #0b0909;
+    color: var(--hero-paper);
+  }
+
+  .future-hero__real-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: clamp(2rem, 3.5vw, 2.8rem);
+    max-width: 34rem;
+    padding: 0.85rem 1.1rem;
+    border-radius: 1.1rem;
+    background: rgba(15, 12, 12, 0.75);
+    border: 1px solid rgba(200, 163, 95, 0.35);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 20px rgba(200, 163, 95, 0.1);
+    transition: all 350ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .future-hero__real-card:hover {
+    border-color: rgba(200, 163, 95, 0.65);
+    transform: translateY(-3px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(200, 163, 95, 0.2);
+  }
+
+  .future-hero__real-img-wrap {
+    width: 4.2rem;
+    height: 4.2rem;
+    flex: 0 0 auto;
+    border-radius: 0.8rem;
+    overflow: hidden;
+    border: 1.5px solid rgba(200, 163, 95, 0.4);
+  }
+
+  .future-hero__real-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 500ms ease;
+  }
+
+  .future-hero__real-card:hover .future-hero__real-img {
+    transform: scale(1.08);
+  }
+
+  .future-hero__badge-icon {
+    font-size: 1.1rem;
+    color: #fde047;
+  }
+
+  .future-hero__badge-card strong {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1.25;
+  }
+
+  .future-hero__badge-card small {
+    display: block;
+    font-size: 0.68rem;
+    color: #c9bdac;
+    margin-top: 0.12rem;
+  }
+
+  .future-hero__bg-img {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: right center;
+    opacity: 0.98;
+  }
+
+  .future-hero__bg-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(90deg, rgba(11, 9, 9, 0.92) 0%, rgba(11, 9, 9, 0.6) 48%, rgba(11, 9, 9, 0.05) 100%);
+    pointer-events: none;
+  }
+
+  .future-hero__layout {
+    display: flex;
+    min-height: calc(100svh - 4.5rem);
+    align-items: center;
+    padding-block: clamp(4rem, 8vw, 7rem) 7.5rem;
+  }
+
+  .future-hero__copy {
+    position: relative;
+    z-index: 3;
+    animation: hero-reveal 850ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .future-hero__meta {
+    display: flex;
+    max-width: 38rem;
+    align-items: center;
+    gap: 0.7rem;
+    color: #e5d9c8;
+    font-size: 0.66rem;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    line-height: 1.4;
+    text-transform: uppercase;
+  }
+
+  .future-hero__signal {
+    width: 0.55rem;
+    height: 0.55rem;
+    flex: 0 0 auto;
+    border-radius: 999px;
+    background: #c8a35f;
+    box-shadow: 0 0 0 0.3rem rgb(200 163 95 / 0.12), 0 0 1.5rem rgb(200 163 95 / 0.7);
+  }
+
+  .future-hero__edition {
+    margin-left: auto;
+    color: #a38e77;
+  }
+
+  .future-hero__title {
+    display: flex;
+    max-width: 12ch;
+    flex-direction: column;
+    margin: clamp(1.4rem, 3vw, 2.2rem) 0 0;
+    font-family: var(--font-display);
+    font-size: clamp(3.45rem, 7.1vw, 7.6rem);
+    font-weight: 500;
+    letter-spacing: -0.065em;
+    line-height: 0.78;
+  }
+
+  .future-hero__title > span:nth-child(2) {
+    padding-left: clamp(0.4rem, 4vw, 3.8rem);
+  }
+
+  .future-hero__title-accent {
+    position: relative;
+    display: inline-block;
+    width: max-content;
+    max-width: 14ch;
+    margin-top: 0.18em;
+    font-size: clamp(2.6rem, 5.2vw, 5.4rem);
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    font-style: normal;
+    line-height: 0.95;
+    background: linear-gradient(110deg, #ffffff 10%, #fde047 60%, #4ade80 100%);
+    background-clip: text;
+    color: transparent;
+    -webkit-background-clip: text;
+    filter: drop-shadow(0 2px 10px rgba(74, 222, 128, 0.25)) drop-shadow(0 2px 6px rgba(253, 224, 71, 0.2));
+    transition: filter 400ms ease, transform 400ms ease;
+  }
+
+  .future-hero__title-accent:hover {
+    filter: drop-shadow(0 0 20px rgba(253, 224, 71, 0.4)) drop-shadow(0 0 25px rgba(74, 222, 128, 0.4));
+    transform: translateY(-2px);
+  }
+
+  .future-hero__intro {
+    max-width: 34rem;
+    margin-top: clamp(1.8rem, 4vw, 2.7rem);
+    color: var(--hero-muted);
+    font-size: clamp(0.98rem, 1.6vw, 1.15rem);
+    line-height: 1.7;
+  }
+
+  .future-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+    margin-top: 2rem;
+  }
+
+  .future-hero__primary,
+  .future-hero__secondary {
+    display: inline-flex;
+    min-height: 3.25rem;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid transparent;
+    padding: 0.82rem 1.2rem;
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+  }
+
+  .future-hero__primary {
+    gap: 2.2rem;
+    background: linear-gradient(110deg, #a94f35, #671f32 72%);
+    box-shadow: 0 1rem 3rem rgb(103 31 50 / 0.38);
+    color: #fff4e4;
+  }
+
+  .future-hero__primary:hover,
+  .future-hero__piece-link:hover {
+    transform: translateY(-3px);
+  }
+
+  .future-hero__arrow {
+    font-size: 1.1rem;
+  }
+
+  .future-hero__secondary {
+    border-color: rgb(248 240 223 / 0.24);
+    background: rgb(248 240 223 / 0.04);
+    color: #eadfce;
+    backdrop-filter: blur(12px);
+  }
+
+  .future-hero__secondary:hover {
+    border-color: rgb(200 163 95 / 0.7);
+    background: rgb(248 240 223 / 0.08);
+    transform: translateY(-3px);
+  }
+
+  .future-hero__facts {
+    display: flex;
+    gap: clamp(1.8rem, 5vw, 4rem);
+    margin: 2.6rem 0 0;
+  }
+
+  .future-hero__facts div {
+    position: relative;
+    padding-left: 1rem;
+  }
+
+  .future-hero__facts div::before {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 1px;
+    background: linear-gradient(#c8a35f, transparent);
+    content: '';
+  }
+
+  .future-hero__facts dt {
+    color: #806f61;
+    font-size: 0.61rem;
+    font-weight: 800;
+    letter-spacing: 0.17em;
+    text-transform: uppercase;
+  }
+
+  .future-hero__facts dd {
+    margin: 0.35rem 0 0;
+    color: #e9dfd0;
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+  }
+
+  .future-hero__stage {
+    position: relative;
+    z-index: 2;
+    min-width: 0;
+    animation: hero-stage-reveal 1s 120ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .future-hero__frame {
+    position: relative;
+    width: min(100%, 31rem);
+    margin-inline: auto;
+    padding: 1px;
+    background: linear-gradient(145deg, rgb(200 163 95 / 0.9), rgb(169 79 53 / 0.08) 43%, rgb(248 240 223 / 0.32));
+    box-shadow: 0 2.5rem 7rem rgb(0 0 0 / 0.56), 0 0 6rem rgb(103 31 50 / 0.2);
+    clip-path: polygon(12% 0, 100% 0, 100% 90%, 88% 100%, 0 100%, 0 10%);
+  }
+
+  .future-hero__figure {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    margin: 0;
+    overflow: hidden;
+    background: #120c0e;
+    clip-path: polygon(12% 0, 100% 0, 100% 90%, 88% 100%, 0 100%, 0 10%);
+  }
+
+  .future-hero__figure img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 78% center;
+    filter: contrast(1.04) saturate(1.05);
+    transition: transform 900ms cubic-bezier(0.22, 1, 0.36, 1), filter 900ms ease;
+  }
+
+  .future-hero__stage:hover .future-hero__figure img {
+    filter: contrast(1.07) saturate(1.13);
+    transform: scale(1.025);
+  }
+
+  .future-hero__image-shade {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg, transparent 52%, rgb(8 7 7 / 0.85) 100%),
+      linear-gradient(90deg, rgb(10 8 9 / 0.2), transparent 36%);
+    pointer-events: none;
+  }
+
+  .future-hero__figure figcaption {
+    position: absolute;
+    right: 1.4rem;
+    bottom: 1.2rem;
+    left: 1.4rem;
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .future-hero__figure figcaption span {
+    color: #b9aa98;
+    font-size: 0.61rem;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .future-hero__figure figcaption strong {
+    max-width: 10rem;
+    color: #f4eadb;
+    font-family: var(--font-display);
+    font-size: clamp(1.1rem, 2vw, 1.5rem);
+    font-weight: 500;
+    line-height: 1;
+    text-align: right;
+  }
+
+  .future-hero__orbit {
+    position: absolute;
+    z-index: -1;
+    border: 1px solid rgb(200 163 95 / 0.18);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .future-hero__orbit::after {
+    position: absolute;
+    top: 50%;
+    left: -0.24rem;
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 50%;
+    background: #d89469;
+    box-shadow: 0 0 1.2rem rgb(216 148 105 / 0.85);
+    content: '';
+  }
+
+  .future-hero__orbit--outer {
+    inset: -9% -16% -7% 3%;
+    animation: hero-orbit 18s linear infinite;
+  }
+
+  .future-hero__orbit--inner {
+    inset: 6% -5% 8% 14%;
+    border-color: rgb(169 79 53 / 0.22);
+    animation: hero-orbit 13s linear infinite reverse;
+  }
+
+  .future-hero__index {
+    position: absolute;
+    top: -2rem;
+    right: -0.25rem;
+    color: rgb(248 240 223 / 0.07);
+    font-size: clamp(5rem, 10vw, 8rem);
+    font-weight: 900;
+    letter-spacing: -0.09em;
+    line-height: 0.62;
+    text-align: right;
+  }
+
+  .future-hero__piece-link {
+    position: absolute;
+    top: 13%;
+    right: -1rem;
+    display: flex;
+    width: 10.5rem;
+    min-height: 4.5rem;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.7rem;
+    border: 1px solid rgb(200 163 95 / 0.36);
+    background: rgb(14 10 11 / 0.78);
+    padding: 0.85rem 1rem;
+    color: #eaddca;
+    font-size: 0.7rem;
+    font-weight: 800;
+    line-height: 1.35;
+    backdrop-filter: blur(16px);
+    transition: transform 180ms ease, border-color 180ms ease;
+  }
+
+  .future-hero__piece-link:hover {
+    border-color: #c8a35f;
+  }
+
+  .future-hero__piece-link span:last-child {
+    color: #d89469;
+    font-size: 1.15rem;
+  }
+
+  .future-hero__scroll {
+    position: absolute;
+    bottom: 2.6rem;
+    left: max(1rem, calc((100% - 76rem) / 2));
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    color: #8e7d6e;
+    font-size: 0.62rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .future-hero__scroll-line {
+    position: relative;
+    width: 2.6rem;
+    height: 1px;
+    overflow: hidden;
+    background: rgb(248 240 223 / 0.16);
+  }
+
+  .future-hero__scroll-line::after {
+    position: absolute;
+    inset: 0;
+    background: #c8a35f;
+    animation: hero-scan 2.4s ease-in-out infinite;
+    content: '';
+    transform: translateX(-100%);
+  }
+
+  .future-hero__beadline {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 0.36rem;
+    background:
+      radial-gradient(circle, #c8a35f 0 42%, transparent 45%) 0 50% / 1.1rem 1.1rem repeat-x,
+      #671f32;
+    opacity: 0.85;
+  }
+
+  .future-hero__grid {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image:
+      linear-gradient(rgb(248 240 223 / 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(248 240 223 / 0.035) 1px, transparent 1px);
+    background-size: 4.25rem 4.25rem;
+    mask-image: linear-gradient(90deg, black, transparent 68%);
+  }
+
+  .future-hero__beam {
+    position: absolute;
+    top: -45%;
+    left: 44%;
+    z-index: -1;
+    width: 1px;
+    height: 180%;
+    background: linear-gradient(transparent, rgb(200 163 95 / 0.36), transparent);
+    box-shadow: 0 0 3rem 1rem rgb(169 79 53 / 0.12);
+    transform: rotate(24deg);
+  }
+
+  .future-hero__glow {
+    position: absolute;
+    z-index: -1;
+    border-radius: 999px;
+    filter: blur(1px);
+    pointer-events: none;
+  }
+
+  .future-hero__glow--wine {
+    top: 12%;
+    right: 14%;
+    width: 18rem;
+    height: 18rem;
+    background: rgb(103 31 50 / 0.17);
+    box-shadow: 0 0 9rem 4rem rgb(103 31 50 / 0.12);
+  }
+
+  .future-hero__glow--gold {
+    right: 34%;
+    bottom: 12%;
+    width: 7rem;
+    height: 7rem;
+    background: rgb(200 163 95 / 0.09);
+    box-shadow: 0 0 7rem 2rem rgb(200 163 95 / 0.08);
+  }
+
+  @media (min-width: 64rem) {
+    .future-hero__layout {
+      grid-template-columns: minmax(0, 1.08fr) minmax(23rem, 0.92fr);
+    }
+  }
+
+  @media (max-width: 63.99rem) {
+    .future-hero__layout {
+      padding-top: 4.5rem;
+    }
+
+    .future-hero__copy {
+      max-width: 43rem;
+    }
+
+    .future-hero__stage {
+      width: min(100%, 34rem);
+      margin-inline: auto;
+    }
+
+    .future-hero__scroll {
+      display: none;
+    }
+  }
+
+  @media (max-width: 39.99rem) {
+    .future-hero__layout {
+      gap: 3.5rem;
+      padding-block: 3rem 5rem;
+    }
+
+    .future-hero__meta {
+      align-items: flex-start;
+      flex-wrap: wrap;
+      letter-spacing: 0.12em;
+    }
+
+    .future-hero__edition {
+      width: 100%;
+      margin-left: 1.25rem;
+    }
+
+    .future-hero__title {
+      font-size: clamp(3.25rem, 16vw, 5rem);
+      line-height: 0.82;
+    }
+
+    .future-hero__title > span:nth-child(2) {
+      padding-left: 0.3rem;
+    }
+
+    .future-hero__actions {
+      flex-direction: column;
+    }
+
+    .future-hero__primary,
+    .future-hero__secondary {
+      width: 100%;
+    }
+
+    .future-hero__primary {
+      justify-content: space-between;
+    }
+
+    .future-hero__facts {
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .future-hero__frame {
+      width: calc(100% - 1.2rem);
+      margin-left: 0;
+    }
+
+    .future-hero__piece-link {
+      top: 10%;
+      right: 0;
+      width: 9.5rem;
+    }
+
+    .future-hero__orbit--outer {
+      inset: -6% -4% -5% 2%;
+    }
+
+    .future-hero__orbit--inner {
+      inset: 5% 4% 8% 10%;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .future-hero__signal {
+      animation: hero-pulse 2.6s ease-out infinite;
+    }
+  }
+
+  @keyframes hero-reveal {
+    from { opacity: 0; transform: translateY(1.4rem); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes hero-stage-reveal {
+    from { opacity: 0; transform: translateY(1.8rem) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  @keyframes hero-pulse {
+    0%, 100% { box-shadow: 0 0 0 0.3rem rgb(200 163 95 / 0.12), 0 0 1.5rem rgb(200 163 95 / 0.7); }
+    50% { box-shadow: 0 0 0 0.55rem rgb(200 163 95 / 0.03), 0 0 2.2rem rgb(200 163 95 / 0.35); }
+  }
+
+  @keyframes hero-orbit {
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes hero-scan {
+    0% { transform: translateX(-100%); }
+    52%, 100% { transform: translateX(100%); }
+  }
+</style>

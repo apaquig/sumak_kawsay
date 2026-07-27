@@ -1,0 +1,17 @@
+[
+  {
+    "content": "Inspeccionar configuración del proyecto",
+    "active_form": "Inspeccionando configuración del proyecto",
+    "status": "completed"
+  },
+  {
+    "content": "Instalar dependencias necesarias",
+    "active_form": "Instalando dependencias necesarias",
+    "status": "completed"
+  },
+  {
+    "content": "Iniciar y verificar el proyecto",
+    "active_form": "Iniciando y verificando el proyecto",
+    "status": "completed"
+  }
+]

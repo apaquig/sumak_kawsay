@@ -1,0 +1,24 @@
+---
+import ShopPage from '../../../components/ShopPage.astro';
+import { getPublishedProducts } from '../../../data/products';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+
+export const prerender = false;
+const products = getPublishedProducts('en');
+const description = 'A collection of handmade beadwork presented by Sumak Kawsay in Saraguro, Loja, Ecuador.';
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Sumak Kawsay Collection',
+  itemListElement: products.map((product, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    name: product.translations.en.name,
+    url: new URL(`/en/product/${product.slug}/`, Astro.site),
+  })),
+};
+---
+
+<BaseLayout lang="en" title="Collection | Sumak Kawsay" description={description} canonicalPath="/en/shop/" alternateEs="/es/tienda/" alternateEn="/en/shop/" schema={schema}>
+  <ShopPage lang="en" />
+</BaseLayout>

@@ -1,0 +1,189 @@
+---
+import type { Product } from '../data/products';
+import type { Language } from '../lib/i18n';
+import { messages, paths } from '../lib/i18n';
+import { getPublishedProducts } from '../lib/catalog';
+import { getCountryCode } from '../lib/geo';
+import ProductCard from './ProductCard.astro';
+import TryOnModal from './TryOnModal';
+import RatingWidget from './RatingWidget';
+
+interface Props { lang: Language; product: Product }
+const { lang, product } = Astro.props;
+const t = messages[lang];
+const content = product.translations[lang];
+const canTryOn = product.category.slug === 'collares' && product.virtualTryOn.enabled;
+
+let countryCode = Astro.url.searchParams.get('country') || Astro.cookies.get('sumak-country-v2')?.value;
+if (countryCode !== 'EC' && countryCode !== 'US') {
+  try {
+    countryCode = getCountryCode(Astro.clientAddress);
+  } catch (e) {
+    countryCode = 'US';
+  }
+}
+
+const activePrice = countryCode === 'EC' ? product.priceEcuador : product.priceUSA;
+
+function isValidInfo(val?: string): boolean {
+  if (!val) return false;
+  const v = val.trim().toLowerCase();
+  if (v === '' || v === '-') return false;
+  
+  const placeholders = [
+    'pendiente',
+    'por confirmar',
+    'verificación',
+    'verificar',
+    'demuestra cómo',
+    'ficha demuestra',
+    'replace-with',
+    'by check',
+    'to be confirmed',
+    'verification pending'
+  ];
+  return !placeholders.some(placeholder => v.includes(placeholder));
+}
+
+const allProducts = await getPublishedProducts(lang);
+const relatedProducts = allProducts
+  .filter((p) => p.category.slug === product.category.slug && p.id !== product.id)
+  .sort((a, b) => (b.rating || 0) - (a.rating || 0));
+const tryOnLabels = lang === 'es' ? {
+  open: 'Probar virtualmente',
+  title: 'Probador virtual',
+  description: 'Usa la cámara o una fotografía y ajusta la posición del collar. El probador no evalúa tu apariencia.',
+  camera: 'Usar cámara',
+  upload: 'Subir foto',
+  close: 'Cerrar probador',
+  scale: 'Tamaño de la pieza',
+  horizontal: 'Posición horizontal',
+  vertical: 'Posición vertical',
+  reset: 'Restablecer ajuste',
+  noImage: 'Activa la cámara o selecciona una fotografía para comenzar.',
+  cameraError: 'No se pudo abrir la cámara. Puedes subir una fotografía.',
+  localPrivacy: 'La imagen permanece en este dispositivo y no se envía al servidor.',
+} : {
+  open: 'Virtual try-on',
+  title: 'Virtual try-on',
+  description: 'Use your camera or a photo and adjust the necklace position. The tool does not evaluate your appearance.',
+  camera: 'Use camera',
+  upload: 'Upload photo',
+  close: 'Close try-on',
+  scale: 'Piece size',
+  horizontal: 'Horizontal position',
+  vertical: 'Vertical position',
+  reset: 'Reset adjustment',
+  noImage: 'Activate the camera or select a photo to begin.',
+  cameraError: 'Could not open camera. You can upload a photo instead.',
+  localPrivacy: 'The image stays on this device and is not sent to the server.',
+};
+---
+
+<nav class="page-shell py-5 text-sm text-charcoal-800/65" aria-label="Breadcrumb">
+  <ol class="flex flex-wrap items-center gap-2">
+    <li><a class="hover:text-wine-700 font-medium" href={paths.home(lang)}>{lang === 'es' ? 'Inicio' : 'Home'}</a></li>
+    <li aria-hidden="true" class="text-charcoal-300">/</li>
+    <li><a class="hover:text-wine-700 font-medium" href={paths.shop(lang)}>{t.navCollection}</a></li>
+    <li aria-hidden="true" class="text-charcoal-300">/</li>
+    <li><a class="hover:text-wine-700 font-medium" href={`${paths.shop(lang)}?category=${product.category.slug}&page=1`}>{product.category.label[lang]}</a></li>
+    <li aria-hidden="true" class="text-charcoal-300">/</li>
+    <li aria-current="page" class="text-charcoal-950 font-semibold truncate max-w-[20ch]">{content.name}</li>
+  </ol>
+</nav>
+
+<article class="page-shell pb-20 pt-3">
+  <div class="grid gap-10 lg:grid-cols-2 lg:gap-16 items-start">
+    <div class="grid gap-4">
+      <div class="relative aspect-square overflow-hidden rounded-3xl border border-charcoal-950/10 bg-white">
+        <img
+          src={product.image.url}
+          alt={product.image.alt[lang]}
+          width={product.image.width}
+          height={product.image.height}
+          class="size-full object-cover object-center"
+        />
+        {product.featured && (
+          <span class="absolute top-4 left-4 rounded-full bg-gold-450 px-3.5 py-1.5 text-[0.7rem] font-extrabold uppercase tracking-widest text-charcoal-950 shadow-sm border border-gold-300/40">
+            {lang === 'es' ? 'Destacado' : 'Featured'}
+          </span>
+        )}
+        {canTryOn && (
+          <div class="absolute top-4 right-4 z-10">
+            <TryOnModal client:idle productName={content.name} productImage={product.virtualTryOn.overlayImageUrl || product.image.url} category={product.category.slug} labels={tryOnLabels} />
+          </div>
+        )}
+      </div>
+    </div>
+
+    <div>
+      <span class="text-xs font-extrabold uppercase tracking-widest text-terracotta-600">{product.category.label[lang]}</span>
+      <h1 class="font-display text-4xl sm:text-5xl text-charcoal-950 mt-2 leading-none">{content.name}</h1>
+      
+      <div class="mt-4 flex flex-wrap items-center justify-between gap-4">
+        <RatingWidget client:load productId={product.id} initialRating={product.rating || 5.0} initialCount={product.reviewsCount !== undefined && product.reviewsCount !== null ? product.reviewsCount : 1} size="lg" lang={lang} />
+        <div>
+          {activePrice && (
+            <span class="font-display text-3xl font-extrabold text-wine-900">${activePrice.toFixed(2)} USD</span>
+          )}
+          {!activePrice && (
+            <span class="font-bold text-wine-900">{t.noPrice}</span>
+          )}
+        </div>
+      </div>
+      <p class="mt-6 text-lg leading-8 text-charcoal-800/80">{content.description}</p>
+
+      {(isValidInfo(content.materials) || isValidInfo(content.technique) || isValidInfo(product.origin) || isValidInfo(product.dimensions) || isValidInfo(content.careInstructions)) && (
+        <dl class="mt-9 divide-y divide-charcoal-950/10 border-y border-charcoal-950/10">
+          {isValidInfo(content.materials) && (
+            <div class="grid gap-2 py-4 sm:grid-cols-[9rem_1fr]"><dt class="font-bold">{t.materials}</dt><dd class="text-charcoal-800/75">{content.materials}</dd></div>
+          )}
+          {isValidInfo(content.technique) && (
+            <div class="grid gap-2 py-4 sm:grid-cols-[9rem_1fr]"><dt class="font-bold">{t.technique}</dt><dd class="text-charcoal-800/75">{content.technique}</dd></div>
+          )}
+          {isValidInfo(product.origin) && (
+            <div class="grid gap-2 py-4 sm:grid-cols-[9rem_1fr]"><dt class="font-bold">{t.origin}</dt><dd class="text-charcoal-800/75">{product.origin}</dd></div>
+          )}
+          {isValidInfo(product.dimensions) && (
+            <div class="grid gap-2 py-4 sm:grid-cols-[9rem_1fr]"><dt class="font-bold">{t.dimensions}</dt><dd class="text-charcoal-800/75">{product.dimensions}</dd></div>
+          )}
+          {isValidInfo(content.careInstructions) && (
+            <div class="grid gap-2 py-4 sm:grid-cols-[9rem_1fr]"><dt class="font-bold">{t.care}</dt><dd class="text-charcoal-800/75">{content.careInstructions}</dd></div>
+          )}
+        </dl>
+      )}
+    </div>
+  </div>
+
+  {isValidInfo(content.story) && (
+    <section class="section-space grid gap-8 border-b border-charcoal-950/10 lg:grid-cols-[0.55fr_1fr]" aria-labelledby="piece-story">
+      <p class="eyebrow">{t.pieceStory}</p>
+      <div>
+        <h2 id="piece-story" class="font-display text-4xl leading-none sm:text-5xl">{lang === 'es' ? '¿Qué hace única a esta pieza?' : 'What makes this piece unique?'}</h2>
+        <p class="mt-5 max-w-2xl text-lg leading-8 text-charcoal-800/80">{content.story}</p>
+      </div>
+    </section>
+  )}
+
+  {relatedProducts.length > 0 && (
+    <section class="section-space border-t border-charcoal-950/10" aria-labelledby="related-title">
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
+        <div>
+          <p class="eyebrow">{lang === 'es' ? 'Colección relacionada' : 'Related collection'}</p>
+          <h2 id="related-title" class="font-display text-4xl leading-none mt-2">
+            {lang === 'es' ? `Más en ${product.category.label[lang]}` : `More in ${product.category.label[lang]}`}
+          </h2>
+        </div>
+        <a class="button-primary text-sm self-start sm:self-auto" href={paths.shop(lang)}>
+          {lang === 'es' ? 'Ver toda la colección' : 'View full collection'}
+        </a>
+      </div>
+
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {relatedProducts.map((relatedProduct, index) => (
+          <ProductCard product={relatedProduct} lang={lang} index={index} />
+        ))}
+      </div>
+    </section>
+  )}
+</article>

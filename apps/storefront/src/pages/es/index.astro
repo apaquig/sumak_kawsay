@@ -1,0 +1,19 @@
+---
+import HomePage from '../../components/HomePage.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export const prerender = false;
+const title = 'Sumak Kawsay | Artesanías de mullos en Saraguro';
+const description = 'Artesanías de mullos elaboradas a mano y presentadas con información clara sobre su origen, materiales, técnica y cuidado.';
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Sumak Kawsay',
+  inLanguage: 'es',
+  description,
+};
+---
+
+<BaseLayout lang="es" title={title} description={description} canonicalPath="/es/" alternateEs="/es/" alternateEn="/en/" schema={schema}>
+  <HomePage lang="es" />
+</BaseLayout>

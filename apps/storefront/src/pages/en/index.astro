@@ -1,0 +1,19 @@
+---
+import HomePage from '../../components/HomePage.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export const prerender = false;
+const title = 'Sumak Kawsay | Beadwork crafts from Saraguro';
+const description = 'Handmade beadwork presented with clear information about its origin, materials, technique, and care.';
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Sumak Kawsay',
+  inLanguage: 'en',
+  description,
+};
+---
+
+<BaseLayout lang="en" title={title} description={description} canonicalPath="/en/" alternateEs="/es/" alternateEn="/en/" schema={schema}>
+  <HomePage lang="en" />
+</BaseLayout>

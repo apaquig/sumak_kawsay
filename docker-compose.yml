@@ -1,0 +1,36 @@
+services:
+  mongodb:
+    image: mongo:8
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+
+  libretranslate:
+    image: libretranslate/libretranslate:latest
+    restart: unless-stopped
+    environment:
+      LT_LOAD_ONLY: es,en
+    ports:
+      - "5000:5000"
+
+  api:
+    build:
+      context: ./apps/api
+    restart: unless-stopped
+    depends_on:
+      - mongodb
+      - libretranslate
+    environment:
+      PORT: 4000
+      MONGODB_URI: mongodb://mongodb:27017/sumak_kawsay
+      LIBRETRANSLATE_URL: http://libretranslate:5000
+      ADMIN_ORIGIN: http://localhost:5173
+      STOREFRONT_ORIGIN: http://localhost:4321
+      JWT_SECRET: local-development-only
+    ports:
+      - "4000:4000"
+
+volumes:
+  mongodb_data:

@@ -1,0 +1,173 @@
+---
+import { getPublishedProductsPaginated, getCategories } from '../lib/catalog';
+import type { Language } from '../lib/i18n';
+import { messages, paths } from '../lib/i18n';
+import ProductCard from './ProductCard.astro';
+
+interface Props { lang: Language }
+const { lang } = Astro.props;
+const t = messages[lang];
+
+const url = Astro.url;
+const currentCategory = url.searchParams.get('category') || 'all';
+const currentPage = parseInt(url.searchParams.get('page') || '1', 10);
+const ids = url.searchParams.get('ids') || undefined;
+
+const limit = currentCategory === 'all' || currentCategory === 'favorites' ? 15 : 10;
+
+const categories = await getCategories(lang);
+const { products, pagination } = await getPublishedProductsPaginated(lang, currentPage, limit, currentCategory, ids);
+
+const sortedProducts = [...products].sort((a, b) => (b.rating || 0) - (a.rating || 0));
+---
+
+<h1 class="sr-only">{t.shopTitle}</h1>
+
+<section class="section-space bg-ivory-50">
+  <div class="page-shell">
+    <div class="mb-9 flex flex-wrap gap-2" role="group" aria-label={lang === 'es' ? 'Filtrar por categoría' : 'Filter by category'}>
+      <a
+        href={`?category=all&page=1`}
+        class={`category-filter min-h-11 rounded border px-4 text-sm font-bold flex items-center justify-center transition-colors duration-200 ${
+          currentCategory === 'all'
+            ? 'border-wine-700 bg-wine-700 text-white'
+            : 'border-charcoal-950/15 bg-white text-charcoal-800 hover:border-wine-700'
+        }`}
+        aria-pressed={currentCategory === 'all' ? 'true' : 'false'}
+      >
+        {t.allCategories}
+      </a>
+      {categories.map(([slug, label]) => (
+        <a
+          href={`?category=${slug}&page=1`}
+          class={`category-filter min-h-11 rounded border px-4 text-sm font-bold flex items-center justify-center transition-colors duration-200 ${
+            currentCategory === slug
+              ? 'border-wine-700 bg-wine-700 text-white'
+              : 'border-charcoal-950/15 bg-white text-charcoal-800 hover:border-wine-700'
+          }`}
+          aria-pressed={currentCategory === slug ? 'true' : 'false'}
+        >
+          {label}
+        </a>
+      ))}
+      <button
+        id="favorites-filter-btn"
+        class={`category-filter min-h-11 rounded border px-4 text-sm font-bold flex items-center gap-1.5 justify-center transition-colors duration-200 ${
+          currentCategory === 'favorites'
+            ? 'border-wine-700 bg-wine-700 text-white'
+            : 'border-wine-700/30 bg-wine-50 text-wine-900 hover:border-wine-700'
+        }`}
+        aria-pressed={currentCategory === 'favorites' ? 'true' : 'false'}
+        type="button"
+      >
+        <span class="text-wine-700 font-bold">♥</span> {lang === 'es' ? 'Mis Favoritos' : 'My Favorites'}
+      </button>
+    </div>
+
+    <div id="catalog-grid" class="flex flex-wrap justify-center gap-6" aria-live="polite">
+      {sortedProducts.map((product, index) => (
+        <div data-category={product.category.slug} class="w-full sm:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-1rem)]">
+          <ProductCard product={product} lang={lang} index={index} />
+        </div>
+      ))}
+    </div>
+
+    <!-- Controles de Paginación -->
+    {pagination.totalPages > 1 && (
+      <div id="pagination-controls" class="mt-12 flex justify-center items-center gap-1.5" data-lang={lang}>
+        {currentPage > 1 ? (
+          <a
+            href={`?category=${currentCategory}&page=${currentPage - 1}${ids ? `&ids=${ids}` : ''}`}
+            class="px-4 py-2 border border-charcoal-950/10 rounded font-semibold text-xs transition min-h-9 flex items-center justify-center hover:border-wine-700 hover:text-wine-700 bg-white"
+          >
+            {lang === 'es' ? 'Anterior' : 'Previous'}
+          </a>
+        ) : (
+          <span class="px-4 py-2 border border-charcoal-950/10 rounded font-semibold text-xs min-h-9 flex items-center justify-center opacity-40 cursor-not-allowed bg-white">
+            {lang === 'es' ? 'Anterior' : 'Previous'}
+          </span>
+        )}
+
+        {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map((p) => {
+          const active = p === currentPage;
+          return (
+            <a
+              href={`?category=${currentCategory}&page=${p}${ids ? `&ids=${ids}` : ''}`}
+              class={`min-w-9 min-h-9 px-3 border rounded text-xs font-bold flex items-center justify-center transition ${
+                active
+                  ? 'border-wine-700 bg-wine-700 text-white'
+                  : 'border-charcoal-950/10 bg-white text-charcoal-800 hover:border-wine-700 hover:text-wine-700'
+              }`}
+            >
+              {p}
+            </a>
+          );
+        })}
+
+        {currentPage < pagination.totalPages ? (
+          <a
+            href={`?category=${currentCategory}&page=${currentPage + 1}${ids ? `&ids=${ids}` : ''}`}
+            class="px-4 py-2 border border-charcoal-950/10 rounded font-semibold text-xs transition min-h-9 flex items-center justify-center hover:border-wine-700 hover:text-wine-700 bg-white"
+          >
+            {lang === 'es' ? 'Siguiente' : 'Next'}
+          </a>
+        ) : (
+          <span class="px-4 py-2 border border-charcoal-950/10 rounded font-semibold text-xs min-h-9 flex items-center justify-center opacity-40 cursor-not-allowed bg-white">
+            {lang === 'es' ? 'Siguiente' : 'Next'}
+          </span>
+        )}
+      </div>
+    )}
+
+    <div id="favorites-empty-msg" class={currentCategory === 'favorites' && sortedProducts.length === 0 ? 'my-12 text-center rounded-lg border border-dashed border-wine-700/30 bg-wine-50/50 p-10' : 'hidden'}>
+      <div class="mx-auto mb-3 grid size-14 place-items-center rounded-full bg-wine-100 text-wine-800">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+      </div>
+      <h3 class="text-xl font-bold text-charcoal-950">{lang === 'es' ? 'Aún no tienes favoritos' : 'No favorites yet'}</h3>
+      <p class="mt-2 text-sm text-charcoal-800/70 max-w-md mx-auto">
+        {lang === 'es'
+          ? 'Toca el botón de corazón ♥ en cualquier artesanía para guardarla aquí y encontrarla fácilmente.'
+          : 'Tap the heart icon ♥ on any handcrafted piece to save it here.'}
+      </p>
+    </div>
+  </div>
+</section>
+
+<script>
+  const favoritesBtn = document.getElementById('favorites-filter-btn');
+  if (favoritesBtn) {
+    favoritesBtn.addEventListener('click', () => {
+      let favList: string[] = [];
+      try {
+        const raw = localStorage.getItem('sumak_favorites_v1');
+        favList = raw ? JSON.parse(raw) : [];
+      } catch (e) {}
+      
+      const ids = favList.join(',');
+      window.location.search = `?category=favorites&ids=${ids}&page=1`;
+    });
+  }
+
+  // Hide unfavorited cards live in the DOM if we are on the favorites page
+  window.addEventListener('sumak-favorites-updated', (e: any) => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('category') === 'favorites') {
+      const activeFavs = e.detail || [];
+      const cards = document.querySelectorAll('[data-product-id]');
+      let visibleCount = 0;
+      cards.forEach(card => {
+        const id = card.getAttribute('data-product-id');
+        const wrapper = card.closest('[data-category]') as HTMLElement;
+        if (id && !activeFavs.includes(id)) {
+          if (wrapper) wrapper.style.display = 'none';
+        } else if (wrapper && wrapper.style.display !== 'none') {
+          visibleCount++;
+        }
+      });
+      if (visibleCount === 0) {
+        const emptyMsg = document.getElementById('favorites-empty-msg');
+        if (emptyMsg) emptyMsg.classList.remove('hidden');
+      }
+    }
+  });
+</script>

@@ -1,0 +1,194 @@
+---
+import type { Language } from '../lib/i18n';
+import { paths } from '../lib/i18n';
+
+interface Props { lang: Language }
+const { lang } = Astro.props;
+
+const copy = lang === 'es' ? {
+  eyebrow: 'TECNICA ANCESTRAL & OFICIO',
+  title: 'El Proceso Artesanal del Tejido en Mullos',
+  intro: 'Del patrón inicial al acabado final: conoce paso a paso cómo se elaboran las artesanías de mullos de vidrio en Saraguro, Loja, Ecuador.',
+  originTitle: 'Nuestro punto de partida',
+  originText: 'La plataforma se construye desde Saraguro, Loja, Ecuador. Rescatamos y documentamos técnicas ancestrales, garantizando transparencia en materiales, origen y personas artesanas.',
+  processTitle: 'Proceso artesanal de tejido',
+  processText: 'El trabajo con mullos requiere planificación del patrón, selección armónica de colores, tejido manual cuenta por cuenta y una rigurosa revisión del acabado final.',
+  materialsTitle: 'Materiales y cuidado',
+  materialsText: 'Las piezas se elaboran con mullos de vidrio calibrados de alta durabilidad. Para conservarlas impecables, deben mantenerse secas, separadas de químicos y guardadas sin tensión.',
+  cta: 'Explorar la colección de joyas',
+  stepsTitle: 'Fases de Elaboración Artesanal',
+} : {
+  eyebrow: 'ANCESTRAL CRAFT & TECHNIQUE',
+  title: 'The Artisanal Beadwork Process',
+  intro: 'From initial pattern design to final finishing: learn step-by-step how glass bead jewelry is handcrafted in Saraguro, Loja, Ecuador.',
+  originTitle: 'Our starting point',
+  originText: 'Built from Saraguro, Loja, Ecuador. We preserve and document ancestral techniques, ensuring transparency in materials, origin, and artisan identity.',
+  processTitle: 'Artisanal weaving process',
+  processText: 'Beadwork requires pattern planning, color selection, meticulous hand weaving bead by bead, and strict quality control of the final finish.',
+  materialsTitle: 'Materials and care',
+  materialsText: 'Crafted with calibrated, high-durability glass beads. To keep your pieces radiant, keep dry, away from chemicals, and store carefully without tension.',
+  cta: 'Explore jewelry collection',
+  stepsTitle: 'Phases of Handcrafting',
+};
+
+const steps = lang === 'es' ? [
+  {
+    num: '01',
+    title: 'Selección & Calibración de Mullos',
+    image: '/images/paso-seleccion-mullos.png',
+    description: 'Seleccionamos minuciosamente mullos de vidrio de tamaño calibrado para garantizar simetría impecable y uniformidad en la textura del tejido.',
+  },
+  {
+    num: '02',
+    title: 'Diseño del Patrón & Simbología',
+    image: '/images/paso-diseno-patron.png',
+    description: 'Plasmamos la geometría sagrada andina, como la Chakana y motivos de la flora local, definiendo la paleta cromática de la pieza.',
+  },
+  {
+    num: '03',
+    title: 'Tejido Manual Cuenta por Cuenta',
+    image: '/images/paso-tejido-manual.png',
+    description: 'Nuestras artesanas tejen pacientemente cada mullo utilizando hilo sintético de alta tensión y agujas de precisión.',
+  },
+  {
+    num: '04',
+    title: 'Inspección de Calidad & Acabado',
+    image: '/images/paso-inspeccion-calidad.png',
+    description: 'Cada broche y terminación se asegura manualmente para ofrecer resistencia, comodidad y durabilidad a lo largo del tiempo.',
+  },
+] : [
+  {
+    num: '01',
+    title: 'Bead Sorting & Calibration',
+    image: '/images/paso-seleccion-mullos.png',
+    description: 'Glass beads are carefully sorted by size and shade to ensure perfect symmetry and tactile uniformity.',
+  },
+  {
+    num: '02',
+    title: 'Pattern & Sacred Geometry Design',
+    image: '/images/paso-diseno-patron.png',
+    description: 'Incorporate Andean sacred motifs such as the Chakana and local flora, defining harmonious color palettes.',
+  },
+  {
+    num: '03',
+    title: 'Bead-by-Beaded Hand Weaving',
+    image: '/images/paso-tejido-manual.png',
+    description: 'Artisans patiently weave each bead using high-tensile thread and precision needles.',
+  },
+  {
+    num: '04',
+    title: 'Finishing & Quality Assurance',
+    image: '/images/paso-inspeccion-calidad.png',
+    description: 'Clasps and edges are securely tied and checked for strength, comfort, and longevity.',
+  },
+];
+---
+
+<!-- Hero Header Section -->
+<section class="relative isolate min-h-[24rem] sm:min-h-[28rem] flex items-center bg-charcoal-950 text-white py-16 overflow-hidden">
+  <img
+    src="/images/hero-familia-saraguro.png"
+    alt="Artesana de Saraguro tejiendo artesanías de mullos"
+    width="1800"
+    height="600"
+    class="absolute inset-0 size-full object-cover object-right sm:object-center opacity-85"
+  />
+  <div class="absolute inset-0 z-0 bg-gradient-to-r from-charcoal-950/95 via-charcoal-950/80 to-charcoal-950/20"></div>
+
+  <div class="page-shell relative z-10 max-w-3xl">
+    <span class="inline-block px-3.5 py-1.5 rounded-full bg-gold-400/20 border border-gold-400/30 text-gold-300 text-xs font-extrabold uppercase tracking-widest mb-4">
+      {copy.eyebrow}
+    </span>
+    <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl text-white leading-tight">
+      {copy.title}
+    </h1>
+    <p class="mt-5 text-base sm:text-lg text-ivory-100/90 leading-relaxed max-w-2xl">
+      {copy.intro}
+    </p>
+  </div>
+</section>
+
+<!-- Main Process Sections (Puntos 01, 02, 03) -->
+<div class="page-shell section-space">
+  <!-- Section 01 -->
+  <section class="grid gap-7 border-b border-charcoal-950/10 pb-16 lg:grid-cols-[0.4fr_1fr] items-start">
+    <div class="flex items-center gap-3">
+      <span class="grid size-12 place-items-center rounded-2xl bg-gradient-to-br from-wine-700 via-wine-800 to-wine-900 text-white font-mono font-extrabold text-xl shadow-md border border-wine-500/30">01</span>
+      <span class="text-xs font-extrabold uppercase tracking-widest text-gold-600">SARAGURO · LOJA</span>
+    </div>
+    <div>
+      <h2 class="font-display text-3xl sm:text-4xl text-charcoal-950">{copy.originTitle}</h2>
+      <p class="mt-4 max-w-2xl text-lg leading-8 text-charcoal-800/90">{copy.originText}</p>
+    </div>
+  </section>
+
+  <!-- Section 02 -->
+  <section id="proceso" class="grid gap-7 border-b border-charcoal-950/10 py-16 lg:grid-cols-[0.4fr_1fr] items-start">
+    <div class="flex items-center gap-3">
+      <span class="grid size-12 place-items-center rounded-2xl bg-gradient-to-br from-wine-700 via-wine-800 to-wine-900 text-white font-mono font-extrabold text-xl shadow-md border border-wine-500/30">02</span>
+      <span class="text-xs font-extrabold uppercase tracking-widest text-gold-600">TEJIDO A MANO</span>
+    </div>
+    <div>
+      <h2 class="font-display text-3xl sm:text-4xl text-charcoal-950">{copy.processTitle}</h2>
+      <p class="mt-4 max-w-2xl text-lg leading-8 text-charcoal-800/90">{copy.processText}</p>
+    </div>
+  </section>
+
+  <!-- Section 03 -->
+  <section class="grid gap-7 border-b border-charcoal-950/10 py-16 lg:grid-cols-[0.4fr_1fr] items-start">
+    <div class="flex items-center gap-3">
+      <span class="grid size-12 place-items-center rounded-2xl bg-gradient-to-br from-wine-700 via-wine-800 to-wine-900 text-white font-mono font-extrabold text-xl shadow-md border border-wine-500/30">03</span>
+      <span class="text-xs font-extrabold uppercase tracking-widest text-gold-600">CONSERVACIÓN</span>
+    </div>
+    <div>
+      <h2 class="font-display text-3xl sm:text-4xl text-charcoal-950">{copy.materialsTitle}</h2>
+      <p class="mt-4 max-w-2xl text-lg leading-8 text-charcoal-800/90">{copy.materialsText}</p>
+      <a class="button-primary mt-8 inline-flex items-center gap-2" href={paths.shop(lang)}>
+        <span>{copy.cta}</span>
+        <span>→</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- Visual Process Walkthrough Step Cards -->
+  <section class="pt-16">
+    <div class="text-center max-w-2xl mx-auto mb-12">
+      <p class="eyebrow">{lang === 'es' ? 'PASO A PASO' : 'STEP BY STEP'}</p>
+      <h2 class="mt-2 font-display text-3xl sm:text-4xl text-charcoal-950">
+        {copy.stepsTitle}
+      </h2>
+    </div>
+
+    <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+      {steps.map((step) => (
+        <div class="group relative flex flex-col overflow-hidden rounded-2xl bg-white border border-charcoal-950/10 shadow-md transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+          <div class="relative aspect-[4/3] w-full overflow-hidden bg-charcoal-900">
+            <img
+              src={step.image}
+              alt={step.title}
+              width="400"
+              height="300"
+              loading="lazy"
+              class="size-full object-cover object-center transition-transform duration-700 group-hover:scale-108"
+            />
+            <div class="absolute top-3 left-3">
+              <span class="grid size-9 place-items-center rounded-xl bg-gradient-to-br from-wine-800/95 to-wine-950/95 text-gold-300 text-xs font-extrabold font-mono backdrop-blur-md border border-gold-400/40 shadow-md">
+                {step.num}
+              </span>
+            </div>
+          </div>
+          <div class="p-6 flex flex-1 flex-col justify-between">
+            <div>
+              <h3 class="font-display text-lg text-charcoal-950 group-hover:text-wine-800 transition-colors">
+                {step.title}
+              </h3>
+              <p class="mt-2 text-xs leading-relaxed text-charcoal-800/80">
+                {step.description}
+              </p>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+</div>
