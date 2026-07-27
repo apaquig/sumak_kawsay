@@ -10,6 +10,8 @@ export interface IUser {
   passwordHash: string;
   photoUrl: string;
   role: UserRole;
+  resetToken?: string;
+  resetTokenExpiry?: Date;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -22,6 +24,8 @@ const userSchema = new Schema<IUser>(
     passwordHash: { type: String, required: true },
     photoUrl: { type: String, default: '' },
     role: { type: String, enum: ['admin', 'editor'], default: 'editor' },
+    resetToken: { type: String },
+    resetTokenExpiry: { type: Date },
   },
   { timestamps: true }
 );

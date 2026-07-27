@@ -21,7 +21,10 @@ export default function ProductTable({ products, selectedId, onSelect }: Props) 
               {product.imageUrl ? <img className="size-full object-cover" src={product.imageUrl} alt="" /> : <Box size={18} className="text-charcoal-800/35" />}
             </span>
             <span className="min-w-0">
-              <strong className="block text-sm leading-5">{product.translations.es.name || 'Producto sin nombre'}</strong>
+              <strong className="block text-sm leading-5">
+                {product.translations.es.name || 'Producto sin nombre'}
+                {product.featured && <span className="ml-1 text-amber-500">★</span>}
+              </strong>
               <span className="mt-1 flex items-center gap-2 flex-wrap">
                 <small className="truncate font-mono text-[0.67rem] text-charcoal-800/50">{product.slug || 'sin-slug'}</small>
                 {(product.priceEcuador !== undefined || product.priceUSA !== undefined) && (
@@ -48,7 +51,17 @@ export default function ProductTable({ products, selectedId, onSelect }: Props) 
                   <span className="grid size-11 shrink-0 place-items-center overflow-hidden rounded border border-charcoal-950/10 bg-ivory-100">
                     {product.imageUrl ? <img className="size-full object-cover" src={product.imageUrl} alt="" /> : <Box size={18} className="text-charcoal-800/35" />}
                   </span>
-                  <span><strong className="block text-sm">{product.translations.es.name || 'Producto sin nombre'}</strong><small className="mt-1 block font-mono text-[0.68rem] text-charcoal-800/55">{product.slug || 'sin-slug'}</small></span>
+                  <span>
+                    <strong className="block text-sm">
+                      {product.translations.es.name || 'Producto sin nombre'}
+                      {product.featured && (
+                        <span className="ml-2 inline-flex items-center rounded bg-amber-100 px-1.5 py-0.5 text-[0.68rem] font-bold text-amber-800 border border-amber-300">
+                          ★ Destacado
+                        </span>
+                      )}
+                    </strong>
+                    <small className="mt-1 block font-mono text-[0.68rem] text-charcoal-800/55">{product.slug || 'sin-slug'}</small>
+                  </span>
                 </button>
               </td>
               <td className="px-4 py-3 text-sm capitalize text-charcoal-800/75">{product.category}</td>

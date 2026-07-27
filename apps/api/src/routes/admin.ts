@@ -153,17 +153,23 @@ export async function adminRoutes(app: FastifyInstance) {
     const user = await UserModel.findOne({ email });
     if (!user) return { success: true }; // don't leak
 
-    const { Settings } = await import('../models/Settings.js');
-    let settings = await Settings.findOne();
-    if (!settings) settings = await Settings.create({});
-
     const token = randomUUID();
-    settings.resetToken = token;
-    settings.resetTokenExpiry = new Date(Date.now() + 60 * 60 * 1000);
-    await settings.save();
+    user.resetToken = token;
+    user.resetTokenExpiry = new Date(Date.now() + 60 * 60 * 1000);
+    await user.save();
 
     if (env.SMTP_HOST && env.SMTP_USER && env.SMTP_PASS) {
-      const resetLink = `${env.ADMIN_ORIGIN}/reset-password?token=${token}`;
+      const origin = (request.headers.origin || request.headers.referer || env.ADMIN_ORIGIN) as string;
+      const baseOrigin = origin.endsWith('/') ? origin.slice(0, -1) : origin;
+      // If referer is a full URL, strip paths to get just origin (e.g. http://host/forgot -> http://host)
+      let cleanOrigin = baseOrigin;
+      try {
+        const parsedUrl = new URL(baseOrigin);
+        cleanOrigin = parsedUrl.origin;
+      } catch {
+        // Fallback to baseOrigin
+      }
+      const resetLink = `${cleanOrigin}/?token=${token}`;
       const transporter = nodemailer.createTransport({
         host: env.SMTP_HOST,
         port: env.SMTP_PORT,
@@ -193,23 +199,16 @@ export async function adminRoutes(app: FastifyInstance) {
       newPassword: z.string().min(6)
     }).parse(request.body);
 
-    const { Settings } = await import('../models/Settings.js');
-    const settings = await Settings.findOne({
+    const user = await UserModel.findOne({
       resetToken: token,
       resetTokenExpiry: { $gt: new Date() }
     });
-    if (!settings) return reply.code(400).send({ error: 'Token inválido o expirado' });
+    if (!user) return reply.code(400).send({ error: 'Token inválido o expirado' });
 
-    // Find the admin user and update password
-    const admin = await UserModel.findOne({ role: 'admin' });
-    if (admin) {
-      admin.passwordHash = await hashPassword(newPassword);
-      await admin.save();
-    }
-
-    settings.resetToken = undefined;
-    settings.resetTokenExpiry = undefined;
-    await settings.save();
+    user.passwordHash = await hashPassword(newPassword);
+    user.resetToken = undefined;
+    user.resetTokenExpiry = undefined;
+    await user.save();
 
     return { success: true };
   });

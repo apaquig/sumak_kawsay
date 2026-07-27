@@ -344,7 +344,21 @@ export default function ProductEditor({ product, categories = [], onClose, onSav
           )}
         </div>
 
-        <footer className="flex min-h-16 shrink-0 items-center justify-between gap-4 border-t border-charcoal-950/10 bg-white px-5 sm:px-7"><p className={`text-sm font-semibold ${message?.type === 'error' ? 'text-red-700' : message?.type === 'success' ? 'text-green-700' : 'text-charcoal-800/60'}`} role={message?.type === 'error' ? 'alert' : 'status'} aria-live="polite">{message?.text ?? ''}</p><label className="flex min-h-11 items-center gap-2 text-sm font-bold"><input type="checkbox" className="size-4 accent-wine-700" checked={draft.published} onChange={(event) => setDraft({ ...draft, published: event.target.checked })} />Publicado</label></footer>
+        <footer className="flex min-h-16 shrink-0 items-center justify-between gap-4 border-t border-charcoal-950/10 bg-white px-5 sm:px-7">
+          <p className={`text-sm font-semibold ${message?.type === 'error' ? 'text-red-700' : message?.type === 'success' ? 'text-green-700' : 'text-charcoal-800/60'}`} role={message?.type === 'error' ? 'alert' : 'status'} aria-live="polite">
+            {message?.text ?? ''}
+          </p>
+          <div className="flex items-center gap-6">
+            <label className="flex min-h-11 items-center gap-2 text-sm font-bold cursor-pointer">
+              <input type="checkbox" className="size-4 accent-wine-700" checked={draft.featured} onChange={(event) => setDraft({ ...draft, featured: event.target.checked })} />
+              Destacado
+            </label>
+            <label className="flex min-h-11 items-center gap-2 text-sm font-bold cursor-pointer">
+              <input type="checkbox" className="size-4 accent-wine-700" checked={draft.published} onChange={(event) => setDraft({ ...draft, published: event.target.checked })} />
+              Publicado
+            </label>
+          </div>
+        </footer>
       </section>
     </div>
   );

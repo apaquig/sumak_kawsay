@@ -46,6 +46,7 @@ export interface AdminProduct {
   imagePublicId?: string;
   imageWidth?: number;
   imageHeight?: number;
+  featured: boolean;
   published: boolean;
   translations: { es: ProductTranslation; en: ProductTranslation };
   translationStatus: { es: TranslationStatus; en: TranslationStatus };
