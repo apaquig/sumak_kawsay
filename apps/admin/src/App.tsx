@@ -97,10 +97,8 @@ export default function App() {
       } catch {
         if (!cancelled) {
           setConnection('offline');
-          // Fallback only if we don't have products already loaded
-          setProducts((current) => current.length > 0 ? current : seedProducts);
-          setNotice('API desconectada: los cambios se mantendrán solo en esta sesión.');
-          if (!silent) setLoading(false);
+          // No cargamos productos locales de respaldo ni apagamos el estado de carga
+          // para evitar confundir al usuario mientras la base de datos responde.
         }
         return false;
       }
