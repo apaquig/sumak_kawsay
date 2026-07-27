@@ -22,8 +22,8 @@ export default function RatingWidget({
 }: RatingWidgetProps) {
   const [userScore, setUserScore] = useState<number | null>(null);
   const [hoverScore, setHoverScore] = useState<number | null>(null);
-  const [rating, setRating] = useState<number>(initialRating);
-  const [count, setCount] = useState<number>(initialCount);
+  const [rating, setRating] = useState<number>(initialRating ?? 5.0);
+  const [count, setCount] = useState<number>(initialCount ?? 0);
   const [submitted, setSubmitted] = useState<boolean>(false);
 
   useEffect(() => {
@@ -131,7 +131,7 @@ export default function RatingWidget({
       <div className={`flex items-center ${starSizes[size]}`}>
         <div className="flex items-center" onMouseLeave={() => setHoverScore(null)}>
           {[1, 2, 3, 4, 5].map((star) => {
-            const isFilled = star <= (hoverScore || userScore || Math.round(rating));
+            const isFilled = star <= (hoverScore || userScore || Math.round(rating || 5));
 
             return (
               <button
@@ -159,10 +159,10 @@ export default function RatingWidget({
           })}
         </div>
         <span className="font-bold text-charcoal-950 ml-1.5 text-xs sm:text-sm">
-          {rating.toFixed(1)}
+          {typeof rating === 'number' && !isNaN(rating) ? rating.toFixed(1) : '5.0'}
         </span>
         <span className="text-xs text-charcoal-800/60 ml-1">
-          ({count})
+          ({count || 0})
         </span>
       </div>
 
