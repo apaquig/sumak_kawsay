@@ -35,15 +35,17 @@ const content = lang === 'es'
 ---
 
 <section class="future-hero" aria-labelledby="future-hero-title">
-  <!-- Full Hero Main Background Image -->
-  <img
-    class="future-hero__bg-img"
-    src="/images/hero-artesana.jpg"
-    width="1920"
-    height="1080"
-    alt={content.imageAlt}
-    fetchpriority="high"
-  />
+  <picture class="future-hero__bg-picture">
+    <source media="(max-width: 639.99px)" srcset="/images/hero-artesana-mobile.png" />
+    <img
+      class="future-hero__bg-img"
+      src="/images/hero-artesana.jpg"
+      width="1920"
+      height="1080"
+      alt={content.imageAlt}
+      fetchpriority="high"
+    />
+  </picture>
   <div class="future-hero__bg-overlay" aria-hidden="true"></div>
 
   <div class="page-shell future-hero__layout">
@@ -164,6 +166,10 @@ const content = lang === 'es'
     font-size: 0.68rem;
     color: #c9bdac;
     margin-top: 0.12rem;
+  }
+
+  .future-hero__bg-picture {
+    display: contents;
   }
 
   .future-hero__bg-img {
