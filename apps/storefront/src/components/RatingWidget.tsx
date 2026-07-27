@@ -126,16 +126,12 @@ export default function RatingWidget({
     lg: 'text-xl gap-1.5',
   };
 
-  if (count === 0 && readOnly) {
-    return null;
-  }
-
   return (
     <div className="inline-flex flex-col gap-0.5">
       <div className={`flex items-center ${starSizes[size]}`}>
         <div className="flex items-center" onMouseLeave={() => setHoverScore(null)}>
           {[1, 2, 3, 4, 5].map((star) => {
-            const isFilled = star <= (hoverScore || userScore || Math.round(rating || 5));
+            const isFilled = star <= (hoverScore || userScore || (count > 0 ? Math.round(rating) : 0));
 
             return (
               <button
