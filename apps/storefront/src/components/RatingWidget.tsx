@@ -32,7 +32,7 @@ export default function RatingWidget({
         const userRatingsRaw = localStorage.getItem(STORAGE_USER_RATINGS);
         if (userRatingsRaw) {
           const userRatings = JSON.parse(userRatingsRaw);
-          if (userRatings[productId] !== undefined) {
+          if (userRatings && userRatings[productId] !== undefined) {
             setUserScore(userRatings[productId]);
           }
         }
@@ -40,7 +40,7 @@ export default function RatingWidget({
         const summaryRaw = localStorage.getItem(STORAGE_SUMMARY_RATINGS);
         if (summaryRaw) {
           const summary = JSON.parse(summaryRaw);
-          if (summary[productId]) {
+          if (summary && summary[productId]) {
             setRating(summary[productId].avg);
             setCount(summary[productId].count);
           }
@@ -72,11 +72,13 @@ export default function RatingWidget({
 
     try {
       const userRatingsRaw = localStorage.getItem(STORAGE_USER_RATINGS);
-      const userRatings = userRatingsRaw ? JSON.parse(userRatingsRaw) : {};
+      const parsedUserRatings = userRatingsRaw ? JSON.parse(userRatingsRaw) : {};
+      const userRatings = (parsedUserRatings && typeof parsedUserRatings === 'object') ? parsedUserRatings : {};
       const oldUserScore = userRatings[productId] ?? null;
 
       const summaryRaw = localStorage.getItem(STORAGE_SUMMARY_RATINGS);
-      const summary = summaryRaw ? JSON.parse(summaryRaw) : {};
+      const parsedSummary = summaryRaw ? JSON.parse(summaryRaw) : {};
+      const summary = (parsedSummary && typeof parsedSummary === 'object') ? parsedSummary : {};
 
       let currentSum = summary[productId]?.sum || (initialRating * initialCount);
       let currentCount = summary[productId]?.count || initialCount;

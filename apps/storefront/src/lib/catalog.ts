@@ -84,6 +84,7 @@ function toProduct(item: CatalogItem, categoryLabels: Map<string, Record<Languag
     priceEcuador: item.priceEcuador ?? (item.category === 'collares' ? 35.00 : item.category === 'manillas' ? 15.00 : 12.00),
     priceUSA: item.priceUSA ?? (item.category === 'collares' ? 45.00 : item.category === 'manillas' ? 25.00 : 18.00),
     rating: item.rating ?? 5.0,
+    reviewsCount: item.reviewsCount ?? 0,
     translations: { es: item.content, en: item.content },
     // La API ya filtra por traducción aprobada, así que todo lo que llega lo está.
     translationStatus: { es: approved, en: approved },

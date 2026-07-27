@@ -16,9 +16,9 @@ export function getCountryCode(ip: string | undefined, headers?: Headers): strin
 
   if (!activeIp) return 'US';
   
-  // Localhost IPs (IPv4/IPv6) map to US by default for dev, unless we want to mock EC
+  // Localhost IPs (IPv4/IPv6) map to EC by default for dev, unless we want to mock US
   if (activeIp === '127.0.0.1' || activeIp === '::1' || activeIp.startsWith('192.168.') || activeIp.startsWith('10.')) {
-    return 'US'; // Default to US for local development fallback
+    return 'EC'; // Default to EC for local development fallback
   }
 
   const geo = geoip.lookup(activeIp);
