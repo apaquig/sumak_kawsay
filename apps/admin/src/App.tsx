@@ -49,7 +49,8 @@ export default function App() {
     setActiveTabState(tab);
     localStorage.setItem('admin_active_tab', tab);
   };
-  const [products, setProducts] = useState<AdminProduct[]>(seedProducts);
+  const [products, setProducts] = useState<AdminProduct[]>([]);
+  const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [selected, setSelected] = useState<AdminProduct>();
   const [query, setQuery] = useState('');
@@ -91,11 +92,15 @@ export default function App() {
         setCategories(cats);
         setConnection('online');
         setNotice((current) => (current.startsWith('API desconectada') ? '' : current));
+        if (!silent) setLoading(false);
         return true;
       } catch {
         if (!cancelled) {
           setConnection('offline');
+          // Fallback only if we don't have products already loaded
+          setProducts((current) => current.length > 0 ? current : seedProducts);
           setNotice('API desconectada: los cambios se mantendrán solo en esta sesión.');
+          if (!silent) setLoading(false);
         }
         return false;
       }
@@ -380,9 +385,18 @@ export default function App() {
         </header>
 
         <div className="mx-auto w-full max-w-[92rem] px-4 py-6 sm:px-7 sm:py-8">
-          {activeTab === 'Productos' && (
+          {loading ? (
+            <div className="grid min-h-[350px] place-items-center rounded border border-charcoal-950/10 bg-white">
+              <div className="text-center">
+                <div className="mx-auto size-8 animate-spin rounded-full border-4 border-wine-700 border-t-transparent" />
+                <p className="mt-4 text-sm font-semibold text-charcoal-800/60">Cargando información desde la base de datos...</p>
+              </div>
+            </div>
+          ) : (
             <>
-              {notice && <div className="mb-5 flex items-start justify-between gap-4 rounded border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900" role="status"><span className="flex gap-2"><CircleAlert className="mt-0.5 shrink-0" size={17} />{notice}</span><button className="font-bold underline" type="button" onClick={() => setNotice('')}>Cerrar</button></div>}
+              {activeTab === 'Productos' && (
+                <>
+                  {notice && <div className="mb-5 flex items-start justify-between gap-4 rounded border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900" role="status"><span className="flex gap-2"><CircleAlert className="mt-0.5 shrink-0" size={17} />{notice}</span><button className="font-bold underline" type="button" onClick={() => setNotice('')}>Cerrar</button></div>}
 
               <section className="grid gap-px overflow-hidden rounded border border-charcoal-950/10 bg-charcoal-950/10 sm:grid-cols-2" aria-label="Resumen del catálogo">
                 <Metric icon={<Boxes size={18} />} label="Publicados" value={stats.published} detail={`${products.length} productos totales`} />
@@ -571,6 +585,7 @@ export default function App() {
           {activeTab === 'Configuración' && (
             <SettingsEditor />
           )}
+        </>)}
         </div>
       </main>
 
