@@ -121,7 +121,7 @@ const tryOnLabels = lang === 'es' ? {
       <h1 class="font-display text-4xl sm:text-5xl text-charcoal-950 mt-2 leading-none">{content.name}</h1>
       
       <div class="mt-4 flex flex-wrap items-center justify-between gap-4">
-        <RatingWidget client:load productId={product.id} initialRating={product.rating || 5.0} initialCount={product.reviewsCount !== undefined && product.reviewsCount !== null ? product.reviewsCount : 1} size="lg" lang={lang} />
+        <RatingWidget client:load productId={product.id} initialRating={product.rating || 5.0} initialCount={product.reviewsCount ?? 0} size="lg" lang={lang} />
         <div>
           {activePrice && (
             <span class="font-display text-3xl font-extrabold text-wine-900">${activePrice.toFixed(2)} USD</span>

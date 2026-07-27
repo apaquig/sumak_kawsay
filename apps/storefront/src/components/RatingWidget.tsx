@@ -126,6 +126,10 @@ export default function RatingWidget({
     lg: 'text-xl gap-1.5',
   };
 
+  if (count === 0 && readOnly) {
+    return null;
+  }
+
   return (
     <div className="inline-flex flex-col gap-0.5">
       <div className={`flex items-center ${starSizes[size]}`}>
