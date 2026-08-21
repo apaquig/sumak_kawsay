@@ -13,10 +13,12 @@ import Sidebar from './components/Sidebar';
 import Login from './components/Login';
 import ResetPassword from './components/ResetPassword';
 import SettingsEditor from './components/SettingsEditor';
+import ConfirmModal from './components/ConfirmModal';
 import { createEmptyProduct, seedProducts, createEmptyGalleryItem } from './data';
 import {
   listProducts,
   saveProduct,
+  deleteProduct,
   ValidationError,
   listGalleryItems,
   saveGalleryItem,
@@ -50,6 +52,9 @@ export default function App() {
     localStorage.setItem('admin_active_tab', tab);
   };
   const [products, setProducts] = useState<AdminProduct[]>([]);
+  const [productToDelete, setProductToDelete] = useState<AdminProduct | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState(false);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [selected, setSelected] = useState<AdminProduct>();
@@ -97,8 +102,8 @@ export default function App() {
       } catch {
         if (!cancelled) {
           setConnection('offline');
-          // No cargamos productos locales de respaldo ni apagamos el estado de carga
-          // para evitar confundir al usuario mientras la base de datos responde.
+          setNotice('API desconectada. Reintentando en 15 segundos...');
+          if (!silent) setLoading(false);
         }
         return false;
       }
@@ -244,6 +249,24 @@ export default function App() {
     } catch (error) {
       setConnection('offline');
       pushToast('error', 'La API no respondió al eliminar el elemento. Se aplicó localmente.');
+    }
+  };
+
+  const handleDeleteProduct = async (id: string) => {
+    setDeleting(true);
+    try {
+      await deleteProduct(id);
+      setProducts((current) => current.filter((product) => product.id !== id));
+      if (selected?.id === id) {
+        setSelected(undefined);
+      }
+      setConnection('online');
+      setSuccessMessage('El producto se ha eliminado de forma permanente.');
+    } catch (error) {
+      setConnection('offline');
+      pushToast('error', 'La API no respondió al eliminar el producto. No se realizaron cambios.');
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -404,7 +427,7 @@ export default function App() {
                   <div className="relative w-full max-w-md"><Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-charcoal-800/40" size={17} /><input className="field-input pl-10" type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Buscar por nombre o slug" aria-label="Buscar productos" /></div>
                   <select className="field-input w-full sm:w-44" value={category} onChange={(event) => setCategory(event.target.value as typeof category)} aria-label="Filtrar categoría"><option value="all">Todas</option><option value="collares">Collares</option><option value="manillas">Manillas</option><option value="aretes">Aretes</option></select>
                 </div>
-                <ProductTable products={paginatedProducts} selectedId={selected?.id} onSelect={setSelected} />
+                 <ProductTable products={paginatedProducts} selectedId={selected?.id} onSelect={setSelected} onDelete={setProductToDelete} />
                 <div className="mt-4 flex flex-col items-center justify-between gap-4 border-t border-charcoal-950/10 pt-4 sm:flex-row">
                   <p className="text-xs text-charcoal-800/55">
                     Mostrando {filtered.length === 0 ? 0 : (currentPage - 1) * ITEMS_PER_PAGE + 1}–{Math.min(filtered.length, currentPage * ITEMS_PER_PAGE)} de {filtered.length} productos
@@ -452,11 +475,6 @@ export default function App() {
           {activeTab === 'Galería' && (
             <>
               {notice && <div className="mb-5 flex items-start justify-between gap-4 rounded border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900" role="status"><span className="flex gap-2"><CircleAlert className="mt-0.5 shrink-0" size={17} />{notice}</span><button className="font-bold underline" type="button" onClick={() => setNotice('')}>Cerrar</button></div>}
-
-              <section className="grid gap-px overflow-hidden rounded border border-charcoal-950/10 bg-charcoal-950/10 sm:grid-cols-2" aria-label="Resumen de la Galería">
-                <Metric icon={<ImageIcon size={18} />} label="Elementos Totales" value={galleryItems.length} detail={`${galleryItems.filter(i => i.published).length} publicados en el sitio`} />
-                <Metric icon={<Boxes size={18} />} label="Ferias y Eventos" value={galleryItems.filter(i => i.category === 'fairs').length} detail="Exposiciones nacionales e internacionales" />
-              </section>
 
               <section className="mt-7">
                 <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -615,6 +633,57 @@ export default function App() {
         />
       )}
       <ToastStack toasts={toasts} onDismiss={dismissToast} />
+
+      <ConfirmModal
+        show={productToDelete !== null}
+        title="Eliminar producto"
+        message={`¿Estás seguro de que deseas eliminar el producto "${productToDelete?.translations.es.name || ''}"? Esta acción no se puede deshacer.`}
+        onConfirm={() => {
+          if (productToDelete) {
+            handleDeleteProduct(productToDelete.id);
+            setProductToDelete(null);
+          }
+        }}
+        onCancel={() => setProductToDelete(null)}
+      />
+
+      {successMessage && (
+        <div
+          className="fixed inset-0 z-[110] flex items-center justify-center bg-charcoal-950/45 px-4 backdrop-blur-sm transition-all"
+          role="dialog"
+          aria-modal="true"
+        >
+          <div className="relative w-full max-w-md overflow-hidden rounded-xl bg-white shadow-2xl animate-in fade-in zoom-in-95 duration-200">
+            <header className="flex items-center justify-between border-b border-charcoal-950/10 px-5 py-4">
+              <div className="flex items-center gap-2 text-charcoal-950">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-500"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                <h5 className="font-bold text-lg leading-none">Confirmación</h5>
+              </div>
+            </header>
+            <div className="px-5 py-6">
+              <p className="text-charcoal-800 leading-relaxed m-0 text-sm">{successMessage}</p>
+            </div>
+            <footer className="flex items-center justify-end gap-3 bg-ivory-50/50 px-5 py-4 border-t border-charcoal-950/10">
+              <button
+                type="button"
+                className="button-primary min-h-[2.35rem] !py-1.5 cursor-pointer"
+                onClick={() => setSuccessMessage(null)}
+              >
+                Aceptar
+              </button>
+            </footer>
+          </div>
+        </div>
+      )}
+
+      {deleting && (
+        <div className="fixed inset-0 z-[120] flex flex-col items-center justify-center bg-charcoal-950/45 px-4 backdrop-blur-sm">
+          <div className="rounded-xl bg-white p-6 shadow-2xl flex flex-col items-center gap-4 animate-in fade-in zoom-in-95 duration-200">
+            <div className="size-10 animate-spin rounded-full border-4 border-wine-700 border-t-transparent" />
+            <p className="text-sm font-semibold text-charcoal-950">Eliminando producto y limpiando imágenes en Cloudinary...</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

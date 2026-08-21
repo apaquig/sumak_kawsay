@@ -52,10 +52,10 @@ const sortedProducts = [...products].sort((a, b) => (b.rating || 0) - (a.rating 
       ))}
       <button
         id="favorites-filter-btn"
-        class={`category-filter min-h-11 rounded border px-4 text-sm font-bold flex items-center gap-1.5 justify-center transition-colors duration-200 ${
+        class={`category-filter min-h-11 rounded border px-4 text-sm font-bold items-center gap-1.5 justify-center transition-colors duration-200 ${
           currentCategory === 'favorites'
-            ? 'border-wine-700 bg-wine-700 text-white'
-            : 'border-wine-700/30 bg-wine-50 text-wine-900 hover:border-wine-700'
+            ? 'border-wine-700 bg-wine-700 text-white flex'
+            : 'border-wine-700/30 bg-wine-50 text-wine-900 hover:border-wine-700 hidden'
         }`}
         aria-pressed={currentCategory === 'favorites' ? 'true' : 'false'}
         type="button"
@@ -134,7 +134,32 @@ const sortedProducts = [...products].sort((a, b) => (b.rating || 0) - (a.rating 
 </section>
 
 <script>
-  const favoritesBtn = document.getElementById('favorites-filter-btn');
+  const favoritesBtn = document.getElementById('favorites-filter-btn') as HTMLElement | null;
+
+  // Show button only if user has favorites saved
+  function syncFavoritesBtn() {
+    if (!favoritesBtn) return;
+    let favList: string[] = [];
+    try {
+      const raw = localStorage.getItem('sumak_favorites_v1');
+      favList = raw ? JSON.parse(raw) : [];
+    } catch (e) {}
+
+    const hasFavs = favList.length > 0;
+    const urlParams = new URLSearchParams(window.location.search);
+    const onFavsPage = urlParams.get('category') === 'favorites';
+
+    if (hasFavs || onFavsPage) {
+      favoritesBtn.classList.remove('hidden');
+      favoritesBtn.classList.add('flex');
+    } else {
+      favoritesBtn.classList.add('hidden');
+      favoritesBtn.classList.remove('flex');
+    }
+  }
+
+  syncFavoritesBtn();
+
   if (favoritesBtn) {
     favoritesBtn.addEventListener('click', () => {
       let favList: string[] = [];
@@ -142,11 +167,14 @@ const sortedProducts = [...products].sort((a, b) => (b.rating || 0) - (a.rating 
         const raw = localStorage.getItem('sumak_favorites_v1');
         favList = raw ? JSON.parse(raw) : [];
       } catch (e) {}
-      
+
       const ids = favList.join(',');
       window.location.search = `?category=favorites&ids=${ids}&page=1`;
     });
   }
+
+  // Re-sync when favorites change (e.g. user removes a fav from the grid)
+  window.addEventListener('sumak-favorites-updated', () => syncFavoritesBtn());
 
   // Hide unfavorited cards live in the DOM if we are on the favorites page
   window.addEventListener('sumak-favorites-updated', (e: any) => {

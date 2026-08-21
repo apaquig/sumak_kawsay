@@ -9,7 +9,7 @@ const description = 'Catálogo de artesanías de mullos elaboradas a mano y pres
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'ItemList',
-  name: 'Colección Sumak Kawsay',
+  name: 'Catálogo Sumak Kawsay',
   itemListElement: products.map((product, index) => ({
     '@type': 'ListItem',
     position: index + 1,
@@ -19,6 +19,6 @@ const schema = {
 };
 ---
 
-<BaseLayout lang="es" title="Colección | Sumak Kawsay" description={description} canonicalPath="/es/tienda/" alternateEs="/es/tienda/" alternateEn="/en/shop/" schema={schema}>
+<BaseLayout lang="es" title="Catálogo | Sumak Kawsay" description={description} canonicalPath="/es/catalogo/" alternateEs="/es/catalogo/" alternateEn="/en/shop/" schema={schema}>
   <ShopPage lang="es" />
 </BaseLayout>

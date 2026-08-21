@@ -1,26 +1,33 @@
-import { Box, Pencil } from 'lucide-react';
+import { Box, Pencil, Trash2 } from 'lucide-react';
 import type { AdminProduct } from '../types';
 
 interface Props {
   products: AdminProduct[];
   selectedId?: string;
   onSelect: (product: AdminProduct) => void;
+  onDelete: (product: AdminProduct) => void;
 }
 
-export default function ProductTable({ products, selectedId, onSelect }: Props) {
+export default function ProductTable({ products, selectedId, onSelect, onDelete }: Props) {
+  const handleDeleteClick = (e: React.MouseEvent, product: AdminProduct) => {
+    e.stopPropagation();
+    onDelete(product);
+  };
+
   if (!products.length) {
     return <div className="grid min-h-64 place-items-center border-y border-charcoal-950/10 bg-white text-center"><div><Box className="mx-auto text-charcoal-800/35" /><p className="mt-3 font-bold">No hay productos con este filtro</p></div></div>;
   }
 
   return (
     <>
+      {/* Mobile view */}
       <div className="divide-y divide-charcoal-950/8 border-y border-charcoal-950/10 bg-white sm:hidden">
         {products.map((product) => (
-          <button key={product.id} type="button" className="grid min-h-24 w-full grid-cols-[3rem_1fr_auto] items-center gap-3 px-4 py-3 text-left hover:bg-ivory-100" onClick={() => onSelect(product)}>
-            <span className="grid size-12 place-items-center overflow-hidden rounded border border-charcoal-950/10 bg-ivory-100">
+          <div key={product.id} className="grid min-h-24 w-full grid-cols-[3rem_1fr_auto] items-center gap-3 px-4 py-3 text-left hover:bg-ivory-100/60">
+            <span className="grid size-12 place-items-center overflow-hidden rounded border border-charcoal-950/10 bg-ivory-100 cursor-pointer" onClick={() => onSelect(product)}>
               {product.imageUrl ? <img className="size-full object-cover" src={product.imageUrl} alt="" /> : <Box size={18} className="text-charcoal-800/35" />}
             </span>
-            <span className="min-w-0">
+            <span className="min-w-0 cursor-pointer" onClick={() => onSelect(product)}>
               <strong className="block text-sm leading-5">
                 {product.translations.es.name || 'Producto sin nombre'}
                 {product.featured && <span className="ml-1 text-amber-500">★</span>}
@@ -32,16 +39,40 @@ export default function ProductTable({ products, selectedId, onSelect }: Props) 
                 )}
               </span>
             </span>
-            <div className="grid size-8 place-items-center rounded bg-ivory-100 text-wine-700">
-              <Pencil size={15} aria-hidden="true" />
+            <div className="flex items-center gap-1.5">
+              <button
+                type="button"
+                className="grid min-h-9 min-w-9 place-items-center rounded text-charcoal-800/40 hover:bg-rose-50 hover:text-rose-600 transition cursor-pointer"
+                onClick={(e) => handleDeleteClick(e, product)}
+                aria-label="Eliminar"
+              >
+                <Trash2 size={16} />
+              </button>
+              <button
+                type="button"
+                className="grid size-8 place-items-center rounded bg-ivory-100 text-wine-700 hover:bg-wine-100 transition cursor-pointer"
+                onClick={() => onSelect(product)}
+                aria-label="Editar"
+              >
+                <Pencil size={15} aria-hidden="true" />
+              </button>
             </div>
-          </button>
+          </div>
         ))}
       </div>
+
+      {/* Desktop view */}
       <div className="hidden overflow-x-auto border-y border-charcoal-950/10 bg-white sm:block">
         <table className="w-full min-w-[760px] border-collapse text-left">
         <thead className="bg-[#f2f2ef] text-[0.68rem] uppercase tracking-[0.1em] text-charcoal-800/60">
-          <tr><th className="px-5 py-3 font-extrabold">Producto</th><th className="px-4 py-3 font-extrabold">Categoría</th><th className="px-4 py-3 font-extrabold">Precio</th><th className="px-4 py-3 font-extrabold">Publicación</th><th className="px-4 py-3 font-extrabold">Actualizado</th><th className="w-14"><span className="sr-only">Abrir</span></th></tr>
+          <tr>
+            <th className="px-5 py-3 font-extrabold">Producto</th>
+            <th className="px-4 py-3 font-extrabold">Categoría</th>
+            <th className="px-4 py-3 font-extrabold">Precio</th>
+            <th className="px-4 py-3 font-extrabold">Publicación</th>
+            <th className="px-4 py-3 font-extrabold">Actualizado</th>
+            <th className="w-24 px-4 py-3 font-extrabold text-right">Acciones</th>
+          </tr>
         </thead>
         <tbody className="divide-y divide-charcoal-950/8">
           {products.map((product) => (
@@ -70,7 +101,28 @@ export default function ProductTable({ products, selectedId, onSelect }: Props) 
               </td>
               <td className="px-4 py-3"><span className={`inline-flex items-center gap-1.5 text-xs font-bold ${product.published ? 'text-andes-700' : 'text-charcoal-800/55'}`}><span className={`size-2 rounded-full ${product.published ? 'bg-emerald-600' : 'bg-charcoal-800/25'}`} />{product.published ? 'Publicado' : 'Borrador'}</span></td>
               <td className="px-4 py-3 text-xs text-charcoal-800/60">{new Intl.DateTimeFormat('es', { dateStyle: 'medium' }).format(new Date(product.updatedAt))}</td>
-              <td className="px-3"><button type="button" className="grid min-h-9 min-w-9 place-items-center rounded bg-wine-50 text-wine-700 hover:bg-wine-100 transition" onClick={() => onSelect(product)} aria-label={`Editar ${product.translations.es.name}`}><Pencil size={16} aria-hidden="true" /></button></td>
+              <td className="px-4 py-3 text-right">
+                <div className="flex items-center justify-end gap-1.5">
+                  <button
+                    type="button"
+                    className="grid min-h-9 min-w-9 place-items-center rounded text-charcoal-800/40 hover:bg-rose-50 hover:text-rose-600 transition cursor-pointer"
+                    onClick={(e) => handleDeleteClick(e, product)}
+                    aria-label={`Eliminar ${product.translations.es.name}`}
+                    title="Eliminar producto"
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                  <button
+                    type="button"
+                    className="grid min-h-9 min-w-9 place-items-center rounded bg-wine-50 text-wine-700 hover:bg-wine-100 transition cursor-pointer"
+                    onClick={() => onSelect(product)}
+                    aria-label={`Editar ${product.translations.es.name}`}
+                    title="Editar producto"
+                  >
+                    <Pencil size={16} aria-hidden="true" />
+                  </button>
+                </div>
+              </td>
             </tr>
           ))}
         </tbody>

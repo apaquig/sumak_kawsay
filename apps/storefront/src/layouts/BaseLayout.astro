@@ -140,7 +140,7 @@ const allProducts = (await getPublishedProducts(lang)).map((p) => ({
           {(() => {
             const currentPath = Astro.url.pathname;
             const isHome = currentPath === `/${lang}` || currentPath === `/${lang}/` || canonicalPath === paths.home(lang);
-            const isShop = currentPath.includes('/tienda') || currentPath.includes('/shop') || currentPath.includes('/producto') || currentPath.includes('/product');
+            const isShop = currentPath.includes('/catalogo') || currentPath.includes('/shop') || currentPath.includes('/producto') || currentPath.includes('/product');
             const isStory = (currentPath.includes('/nuestra-historia') || currentPath.includes('/our-story'));
             const isGallery = (currentPath.includes('/galeria') || currentPath.includes('/gallery'));
             const isProcess = (currentPath.includes('/proceso-artesanal') || currentPath.includes('/craft-process'));
@@ -298,7 +298,7 @@ const allProducts = (await getPublishedProducts(lang)).map((p) => ({
         {(() => {
           const currentPath = Astro.url.pathname;
           const isHome = currentPath === `/${lang}` || currentPath === `/${lang}/` || canonicalPath === paths.home(lang);
-          const isShop = currentPath.includes('/tienda') || currentPath.includes('/shop') || currentPath.includes('/producto') || currentPath.includes('/product');
+          const isShop = currentPath.includes('/catalogo') || currentPath.includes('/shop') || currentPath.includes('/producto') || currentPath.includes('/product');
           const isStory = (currentPath.includes('/nuestra-historia') || currentPath.includes('/our-story'));
           const isGallery = (currentPath.includes('/galeria') || currentPath.includes('/gallery'));
           const isProcess = (currentPath.includes('/proceso-artesanal') || currentPath.includes('/craft-process'));

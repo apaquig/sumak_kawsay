@@ -10,7 +10,7 @@ export const messages = {
     languageName: 'Español',
     skip: 'Saltar al contenido',
     navHome: 'Inicio',
-    navCollection: 'Colección',
+    navCollection: 'Catálogo',
     navStory: 'Nuestra historia',
     navGallery: 'Galería',
     navProcess: 'Proceso artesanal',
@@ -51,7 +51,7 @@ export const messages = {
     languageName: 'English',
     skip: 'Skip to content',
     navHome: 'Home',
-    navCollection: 'Collection',
+    navCollection: 'Catalog',
     navStory: 'Our story',
     navGallery: 'Gallery',
     navProcess: 'Craft process',
@@ -91,7 +91,7 @@ export const messages = {
 
 export const paths = {
   home: (lang: Language) => `/${lang}/`,
-  shop: (lang: Language) => (lang === 'es' ? '/es/tienda/' : '/en/shop/'),
+  shop: (lang: Language) => (lang === 'es' ? '/es/catalogo/' : '/en/shop/'),
   product: (lang: Language, slug: string) =>
     lang === 'es' ? `/es/producto/${slug}/` : `/en/product/${slug}/`,
   story: (lang: Language) =>

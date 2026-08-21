@@ -211,7 +211,7 @@ export default function ContactForm({ lang }: ContactFormProps) {
                   required
                   value={formData.subject}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-4 py-3 rounded-xl bg-ivory-50 border border-charcoal-950/15 text-charcoal-950 text-sm focus:outline-none focus:ring-2 focus:ring-wine-700 focus:bg-white transition-all"
+                  className="w-full appearance-none pl-10 pr-10 py-3 rounded-xl bg-ivory-50 border border-charcoal-950/15 text-charcoal-950 text-sm focus:outline-none focus:ring-2 focus:ring-wine-700 focus:bg-white transition-all cursor-pointer"
                 >
                   {subjects.map((s) => (
                     <option key={s} value={s}>
@@ -219,6 +219,12 @@ export default function ContactForm({ lang }: ContactFormProps) {
                     </option>
                   ))}
                 </select>
+                {/* Custom chevron */}
+                <div className="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none text-charcoal-800/40">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="6 9 12 15 18 9" />
+                  </svg>
+                </div>
               </div>
             </div>
           </div>

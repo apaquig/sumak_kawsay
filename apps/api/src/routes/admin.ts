@@ -392,6 +392,44 @@ export async function adminRoutes(app: FastifyInstance) {
     return saved.toJSON();
   });
 
+  app.delete('/v1/admin/products/:id', async (request) => {
+    await requireAuth(request);
+    const { ProductModel } = await import('../models/Product.js');
+    const { deleteImage } = await import('../services/cloudinary.js');
+    const { id } = request.params as { id: string };
+
+    const product = await ProductModel.findOne({ id });
+    if (product) {
+      // Eliminar imagen principal
+      if (product.imagePublicId) {
+        try {
+          await deleteImage(product.imagePublicId);
+        } catch (e) {
+          request.log.error(`Error deleting product main image: ${product.imagePublicId}`, e);
+        }
+      }
+      // Eliminar imagen del probador virtual
+      if (product.virtualTryOn?.overlayImagePublicId) {
+        try {
+          await deleteImage(product.virtualTryOn.overlayImagePublicId);
+        } catch (e) {
+          request.log.error(`Error deleting virtual try-on overlay: ${product.virtualTryOn.overlayImagePublicId}`, e);
+        }
+      }
+      // Eliminar modelo 3D
+      if (product.model3d?.publicId) {
+        try {
+          await deleteImage(product.model3d.publicId);
+        } catch (e) {
+          request.log.error(`Error deleting 3D model asset: ${product.model3d.publicId}`, e);
+        }
+      }
+    }
+
+    await ProductModel.deleteOne({ id });
+    return { success: true };
+  });
+
   app.post('/v1/admin/products/:id/translate/en', async (request, reply) => {
     await requireAuth(request);
     const { id } = request.params as { id: string };

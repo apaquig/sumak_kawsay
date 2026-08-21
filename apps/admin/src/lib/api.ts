@@ -196,6 +196,16 @@ export async function saveProduct(product: AdminProduct): Promise<AdminProduct> 
   return response.json() as Promise<AdminProduct>;
 }
 
+export async function deleteProduct(id: string): Promise<void> {
+  await ensureOk(
+    await fetch(`${API_URL}/v1/admin/products/${id}`, {
+      method: 'DELETE',
+      headers: headers(),
+    }),
+    'No se pudo eliminar el producto.'
+  );
+}
+
 export async function regenerateTranslation(productId: string) {
   const response = await ensureOk(
     await fetch(`${API_URL}/v1/admin/products/${productId}/translate/en`, {

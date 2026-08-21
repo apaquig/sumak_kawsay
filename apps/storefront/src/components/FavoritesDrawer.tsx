@@ -78,7 +78,7 @@ export default function FavoritesDrawer({ products, lang }: FavoritesDrawerProps
   const getProductUrl = (slug: string) =>
     isEs ? `/es/producto/${slug}/` : `/en/product/${slug}/`;
 
-  const getShopUrl = () => (isEs ? '/es/tienda/' : '/en/shop/');
+  const getShopUrl = () => (isEs ? '/es/catalogo/' : '/en/shop/');
 
   return (
     <>

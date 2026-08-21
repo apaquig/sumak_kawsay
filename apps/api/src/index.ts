@@ -111,6 +111,21 @@ try {
 
 await app.listen({ host: '0.0.0.0', port: env.PORT });
 
+/* ── Render Self-Ping Service to prevent sleeping ────────────────── */
+const selfPingUrl = process.env.RENDER_EXTERNAL_URL || process.env.SELF_PING_URL;
+if (selfPingUrl) {
+  const PING_INTERVAL = 10 * 60 * 1000; // 10 minutes
+  app.log.info(`[Self-Ping] Starting keep-awake service for: ${selfPingUrl}`);
+  setInterval(async () => {
+    try {
+      const response = await fetch(`${selfPingUrl.replace(/\/$/, '')}/health`);
+      app.log.info(`[Self-Ping] Ping sent to ${selfPingUrl}/health. Status: ${response.status}`);
+    } catch (error: any) {
+      app.log.error(`[Self-Ping] Failed to ping ${selfPingUrl}/health: ${error.message}`);
+    }
+  }, PING_INTERVAL);
+}
+
 const shutdown = async () => {
   await app.close();
   await mongoose.disconnect();

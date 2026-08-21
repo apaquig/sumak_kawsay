@@ -19,3 +19,15 @@ export function createUploadSignature(resourceType: 'image' | 'raw') {
   const signature = cloudinary.utils.api_sign_request({ timestamp, folder }, env.CLOUDINARY_API_SECRET);
   return { timestamp, folder, signature, cloudName: env.CLOUDINARY_CLOUD_NAME, apiKey: env.CLOUDINARY_API_KEY, resourceType };
 }
+
+export async function deleteImage(publicId: string): Promise<any> {
+  if (!env.CLOUDINARY_API_KEY || !env.CLOUDINARY_API_SECRET || !env.CLOUDINARY_CLOUD_NAME) {
+    throw new Error('Cloudinary is not configured');
+  }
+  return new Promise((resolve, reject) => {
+    cloudinary.uploader.destroy(publicId, (error, result) => {
+      if (error) reject(error);
+      else resolve(result);
+    });
+  });
+}

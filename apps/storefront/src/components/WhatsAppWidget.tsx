@@ -14,8 +14,6 @@ export default function WhatsAppWidget({
 }: Props) {
   const [selectedRegion, setSelectedRegion] = useState<'ec' | 'us'>('us');
   const [bubbleOpen, setBubbleOpen] = useState(false);
-  const [hasAutoOpened, setHasAutoOpened] = useState(false);
-  const [dismissed, setDismissed] = useState(false);
   const [minimized, setMinimized] = useState(false);
   const [userMessage, setUserMessage] = useState('');
   const isEs = lang === 'es';
@@ -49,16 +47,6 @@ export default function WhatsAppWidget({
         setSelectedRegion(lang === 'es' ? 'ec' : 'us');
       });
   }, [lang]);
-
-  // Auto-open bubble after 4 seconds (only once, unless dismissed)
-  useEffect(() => {
-    if (hasAutoOpened || dismissed) return;
-    const t = setTimeout(() => {
-      setBubbleOpen(true);
-      setHasAutoOpened(true);
-    }, 4000);
-    return () => clearTimeout(t);
-  }, [hasAutoOpened, dismissed]);
 
   const currentPhone = selectedRegion === 'ec' ? ecPhone : usPhone;
   const cleanPhone = currentPhone.replace(/[^0-9]/g, '');
@@ -130,7 +118,7 @@ export default function WhatsAppWidget({
               {/* Close (fully hides, won't auto-open again) */}
               <button
                 type="button"
-                onClick={(e) => { e.stopPropagation(); setBubbleOpen(false); setMinimized(false); setDismissed(true); }}
+                onClick={(e) => { e.stopPropagation(); setBubbleOpen(false); setMinimized(false); }}
                 className="grid size-8 place-items-center rounded-full text-white/80 hover:text-white hover:bg-white/20 transition cursor-pointer"
                 aria-label={isEs ? 'Cerrar' : 'Close'}
                 title={isEs ? 'Cerrar' : 'Close'}
