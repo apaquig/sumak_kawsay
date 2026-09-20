@@ -9,6 +9,8 @@ export interface SimpleProduct {
   category: string;
   imageUrl: string;
   price?: number;
+  priceEcuador?: number;
+  priceUSA?: number;
 }
 
 interface FavoritesDrawerProps {
@@ -21,6 +23,7 @@ const STORAGE_FAVORITES = 'sumak_favorites_v1';
 export default function FavoritesDrawer({ products, lang }: FavoritesDrawerProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [favoriteIds, setFavoriteIds] = useState<string[]>([]);
+  const [country, setCountry] = useState<'EC' | 'US'>('EC');
 
   const loadFavorites = () => {
     try {
@@ -47,11 +50,21 @@ export default function FavoritesDrawer({ products, lang }: FavoritesDrawerProps
       }
     };
 
+    const updateCountry = () => {
+      try {
+        const c = (window as any).__SUMAK_COUNTRY__ || localStorage.getItem('sumak-country-v2') || 'EC';
+        setCountry(c === 'US' ? 'US' : 'EC');
+      } catch (e) {}
+    };
+    updateCountry();
+
     window.addEventListener('sumak-favorites-updated', handleUpdate);
+    window.addEventListener('sumak:country-changed', updateCountry);
     window.addEventListener('storage', loadFavorites);
 
     return () => {
       window.removeEventListener('sumak-favorites-updated', handleUpdate);
+      window.removeEventListener('sumak:country-changed', updateCountry);
       window.removeEventListener('storage', loadFavorites);
     };
   }, []);
@@ -147,11 +160,14 @@ export default function FavoritesDrawer({ products, lang }: FavoritesDrawerProps
                       <div className="flex-1 min-w-0">
                         <p className="text-[0.65rem] font-bold uppercase tracking-wider text-terracotta-500">{product.category}</p>
                         <h3 className="truncate text-sm font-bold text-charcoal-950">{product.name}</h3>
-                        {product.price ? (
-                          <p className="mt-0.5 text-xs font-extrabold text-wine-900">${product.price.toFixed(2)} USD</p>
-                        ) : (
-                          <p className="mt-0.5 text-xs font-bold text-wine-900">{isEs ? 'Consultar disponibilidad' : 'Ask for availability'}</p>
-                        )}
+                        {(() => {
+                          const itemPrice = country === 'EC' ? (product.priceEcuador ?? product.price) : (product.priceUSA ?? product.price);
+                          return itemPrice ? (
+                            <p className="mt-0.5 text-xs font-extrabold text-wine-900">${itemPrice.toFixed(2)} USD</p>
+                          ) : (
+                            <p className="mt-0.5 text-xs font-bold text-wine-900">{isEs ? 'Consultar disponibilidad' : 'Ask for availability'}</p>
+                          );
+                        })()}
                       </div>
                       <div className="flex items-center gap-1.5 shrink-0">
                         <a

@@ -1,10 +1,9 @@
 ---
 import ShopPage from '../../../components/ShopPage.astro';
-import { getPublishedProducts } from '../../../data/products';
+import { getPublishedProducts } from '../../../lib/catalog';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 
-export const prerender = false;
-const products = getPublishedProducts('en');
+const products = await getPublishedProducts('en');
 const description = 'A collection of handmade beadwork presented by Sumak Kawsay in Saraguro, Loja, Ecuador.';
 const schema = {
   '@context': 'https://schema.org',

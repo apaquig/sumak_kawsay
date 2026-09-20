@@ -1,10 +1,9 @@
 ---
 import ShopPage from '../../../components/ShopPage.astro';
-import { getPublishedProducts } from '../../../data/products';
+import { getPublishedProducts } from '../../../lib/catalog';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 
-export const prerender = false;
-const products = getPublishedProducts('es');
+const products = await getPublishedProducts('es');
 const description = 'Catálogo de artesanías de mullos elaboradas a mano y presentadas por Sumak Kawsay en Saraguro, Loja, Ecuador.';
 const schema = {
   '@context': 'https://schema.org',

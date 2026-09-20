@@ -3,7 +3,6 @@ import type { Product } from '../data/products';
 import type { Language } from '../lib/i18n';
 import { messages, paths } from '../lib/i18n';
 import { getPublishedProducts } from '../lib/catalog';
-import { getCountryCode } from '../lib/geo';
 import ProductCard from './ProductCard.astro';
 import TryOnModal from './TryOnModal';
 import RatingWidget from './RatingWidget';
@@ -13,17 +12,7 @@ const { lang, product } = Astro.props;
 const t = messages[lang];
 const content = product.translations[lang];
 const canTryOn = product.category.slug === 'collares' && product.virtualTryOn.enabled;
-
-let countryCode = Astro.url.searchParams.get('country') || Astro.cookies.get('sumak-country-v2')?.value;
-if (countryCode !== 'EC' && countryCode !== 'US') {
-  try {
-    countryCode = getCountryCode(Astro.clientAddress, Astro.request.headers);
-  } catch (e) {
-    countryCode = 'US';
-  }
-}
-
-const activePrice = countryCode === 'EC' ? product.priceEcuador : product.priceUSA;
+const defaultPrice = product.priceEcuador || product.priceUSA;
 
 function isValidInfo(val?: string): boolean {
   if (!val) return false;
@@ -123,10 +112,14 @@ const tryOnLabels = lang === 'es' ? {
       <div class="mt-4 flex flex-wrap items-center justify-between gap-4">
         <RatingWidget client:load productId={product.id} initialRating={product.rating || 5.0} initialCount={product.reviewsCount ?? 0} size="lg" lang={lang} />
         <div>
-          {activePrice && (
-            <span class="font-display text-3xl font-extrabold text-wine-900">${activePrice.toFixed(2)} USD</span>
+          {defaultPrice && (
+            <span
+              class="sumak-price-display font-display text-3xl font-extrabold text-wine-900"
+              data-price-ec={product.priceEcuador ?? ''}
+              data-price-us={product.priceUSA ?? ''}
+            >${defaultPrice.toFixed(2)} USD</span>
           )}
-          {!activePrice && (
+          {!defaultPrice && (
             <span class="font-bold text-wine-900">{t.noPrice}</span>
           )}
         </div>

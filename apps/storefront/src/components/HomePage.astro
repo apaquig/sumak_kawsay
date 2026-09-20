@@ -8,14 +8,15 @@ import ProductCard from './ProductCard.astro';
 interface Props { lang: Language }
 const { lang } = Astro.props;
 const t = messages[lang];
-const products = (await getPublishedProducts(lang))
-  .filter((product) => product.featured === true)
+const allProducts = await getPublishedProducts(lang);
+const featured = allProducts.filter((product) => product.featured === true);
+const products = (featured.length > 0 ? featured : allProducts)
   .sort((a, b) => {
     const ratingDiff = (b.rating || 0) - (a.rating || 0);
     if (ratingDiff !== 0) return ratingDiff;
     return (b.reviewsCount || 0) - (a.reviewsCount || 0);
   })
-  .slice(0, 5);
+  .slice(0, 6);
 ---
 
 <Hero lang={lang} />

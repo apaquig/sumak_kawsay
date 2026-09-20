@@ -45,7 +45,8 @@ export default function ContactForm({ lang }: ContactFormProps) {
     setResponseMsg('');
 
     try {
-      const res = await fetch('/api/contact', {
+      const apiBase = (typeof window !== 'undefined' && (window as any).__PUBLIC_API_URL__) || import.meta.env.PUBLIC_API_URL || 'http://localhost:4000';
+      const res = await fetch(`${apiBase}/v1/contact`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),

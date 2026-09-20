@@ -1,0 +1,28 @@
+---
+---
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sumak Kawsay · Artesanías de Saraguro</title>
+    <meta http-equiv="refresh" content="0;url=/es/" />
+    <script is:inline>
+      (function() {
+        try {
+          var match = document.cookie.match(/(?:^|;\s*)sumak-language=([^;]+)/);
+          var saved = match ? match[1] : localStorage.getItem('sumak-language');
+          var lang = (saved === 'en' || saved === 'es')
+            ? saved
+            : (navigator.language && navigator.language.toLowerCase().startsWith('en') ? 'en' : 'es');
+          window.location.replace('/' + lang + '/');
+        } catch (e) {
+          window.location.replace('/es/');
+        }
+      })();
+    </script>
+  </head>
+  <body style="background-color: #fffdf8; font-family: sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0;">
+    <p style="color: #671f32; font-size: 1.1rem;">Redirigiendo a Sumak Kawsay...</p>
+  </body>
+</html>

@@ -1,7 +1,7 @@
 import type { APIRoute } from 'astro';
 import { getPublishedProducts } from '../lib/catalog';
 
-export const prerender = false;
+export const prerender = true;
 
 const escapeXml = (value: string) =>
   value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');

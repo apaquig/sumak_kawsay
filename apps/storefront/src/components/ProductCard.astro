@@ -4,23 +4,12 @@ import type { Language } from '../lib/i18n';
 import { messages, paths } from '../lib/i18n';
 import FavoriteButton from './FavoriteButton';
 import RatingWidget from './RatingWidget';
-import { getCountryCode } from '../lib/geo';
 
 interface Props { product: Product; lang: Language; index?: number }
 const { product, lang, index = 0 } = Astro.props;
 const t = messages[lang];
 const content = product.translations[lang];
-
-let countryCode = Astro.url.searchParams.get('country') || Astro.cookies.get('sumak-country-v2')?.value;
-if (countryCode !== 'EC' && countryCode !== 'US') {
-  try {
-    countryCode = getCountryCode(Astro.clientAddress, Astro.request.headers);
-  } catch (e) {
-    countryCode = 'US';
-  }
-}
-
-const activePrice = countryCode === 'EC' ? product.priceEcuador : product.priceUSA;
+const defaultPrice = product.priceEcuador || product.priceUSA;
 ---
 
 <article data-product-id={product.id} data-rating={product.rating || 5.0} class="group relative overflow-hidden rounded-[var(--radius-card)] border border-charcoal-950/10 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lift motion-reduce:transform-none" style={`animation-delay:${index * 90}ms`}>
@@ -54,10 +43,14 @@ const activePrice = countryCode === 'EC' ? product.priceEcuador : product.priceU
     <p class="mt-3 min-h-12 text-sm leading-6 text-charcoal-800/80 line-clamp-2">{content.description}</p>
     <div class="mt-5 flex items-center justify-between gap-4 border-t border-charcoal-950/10 pt-4">
       <div class="mt-3 flex items-center justify-between">
-        {activePrice && (
-          <span class="font-display text-xl font-extrabold text-wine-900">${activePrice.toFixed(2)} USD</span>
+        {defaultPrice && (
+          <span
+            class="sumak-price-display font-display text-xl font-extrabold text-wine-900"
+            data-price-ec={product.priceEcuador ?? ''}
+            data-price-us={product.priceUSA ?? ''}
+          >${defaultPrice.toFixed(2)} USD</span>
         )}
-        {!activePrice && (
+        {!defaultPrice && (
           <span class="font-bold text-wine-900">{lang === 'es' ? 'Consultar disponibilidad' : 'Ask for availability'}</span>
         )}
       </div>

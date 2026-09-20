@@ -10,7 +10,6 @@
     "preview": "ASTRO_TELEMETRY_DISABLED=1 astro preview --host 127.0.0.1 --port 4321"
   },
   "dependencies": {
-    "@astrojs/node": "latest",
     "@astrojs/react": "latest",
     "@astrojs/sitemap": "latest",
     "@mediapipe/tasks-vision": "latest",
@@ -23,7 +22,6 @@
     "@tensorflow/tfjs-converter": "^4.22.0",
     "@tensorflow/tfjs-core": "^4.22.0",
     "astro": "latest",
-    "geoip-lite": "^1.4.10",
     "lucide-react": "latest",
     "motion": "latest",
     "react": "latest",
@@ -33,7 +31,6 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.9",
-    "@types/geoip-lite": "^1.4.4",
     "@types/react": "latest",
     "@types/react-dom": "latest",
     "@types/three": "latest",

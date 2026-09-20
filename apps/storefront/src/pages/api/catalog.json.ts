@@ -2,7 +2,7 @@ import type { APIRoute } from 'astro';
 import { getPublishedProducts } from '../../lib/catalog';
 
 // Catálogo público de solo lectura, servido desde Mongo.
-export const prerender = false;
+export const prerender = true;
 
 export const GET: APIRoute = async ({ site }) => {
   const [es, en] = await Promise.all([getPublishedProducts('es'), getPublishedProducts('en')]);

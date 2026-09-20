@@ -1,26 +1,41 @@
-import geoip from 'geoip-lite';
+export type CountryCode = 'EC' | 'US';
 
-export function getCountryCode(ip: string | undefined, headers?: Headers): string {
-  // 1. Try Cloudflare Country Header
-  const cfCountry = headers?.get('cf-ipcountry')?.toUpperCase();
-  if (cfCountry === 'EC' || cfCountry === 'US') {
-    return cfCountry;
+/**
+ * Detecta el país en el navegador del cliente basándose en:
+ * 1. Parámetro en URL (?country=EC o ?country=US)
+ * 2. Preferencia guardada en localStorage / cookie
+ * 3. Detección nativa de zona horaria del sistema (Ecuador: America/Guayaquil o Pacific/Galapagos)
+ * 4. Fallback por defecto: 'US' (internacional)
+ */
+export function detectBrowserCountry(): CountryCode {
+  if (typeof window === 'undefined') return 'EC';
+
+  try {
+    const urlParams = new URLSearchParams(window.location.search);
+    const param = urlParams.get('country')?.toUpperCase();
+    if (param === 'EC' || param === 'US') return param as CountryCode;
+
+    const saved = localStorage.getItem('sumak-country-v2');
+    if (saved === 'EC' || saved === 'US') return saved as CountryCode;
+
+    const match = document.cookie.match(/(?:^|;\s*)sumak-country-v2=([^;]+)/);
+    if (match && (match[1] === 'EC' || match[1] === 'US')) {
+      return match[1] as CountryCode;
+    }
+
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    if (tz === 'America/Guayaquil' || tz === 'Pacific/Galapagos') {
+      return 'EC';
+    }
+  } catch {
+    // fallback seguro
   }
-  if (cfCountry && cfCountry !== 'XX') {
-    return cfCountry === 'EC' ? 'EC' : 'US'; // Default to US if not EC
-  }
 
-  // 2. Try to get Real IP from headers
-  const realIp = headers?.get('x-forwarded-for')?.split(',')[0].trim() || headers?.get('x-real-ip');
-  const activeIp = realIp || ip;
-
-  if (!activeIp) return 'US';
-  
-  // Localhost IPs (IPv4/IPv6) map to EC by default for dev, unless we want to mock US
-  if (activeIp === '127.0.0.1' || activeIp === '::1' || activeIp.startsWith('192.168.') || activeIp.startsWith('10.')) {
-    return 'EC'; // Default to EC for local development fallback
-  }
-
-  const geo = geoip.lookup(activeIp);
-  return geo?.country || 'US';
+  return 'US';
 }
+
+/** Fallback para compilación estática (build-time) */
+export function getCountryCode(_ip?: string, _headers?: Headers): CountryCode {
+  return 'EC';
+}
+

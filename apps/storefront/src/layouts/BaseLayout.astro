@@ -3,7 +3,6 @@ import '../styles/global.css';
 import type { Language } from '../lib/i18n';
 import { messages, paths } from '../lib/i18n';
 import { getPublishedProducts } from '../lib/catalog';
-import { getCountryCode } from '../lib/geo';
 import FavoritesDrawer from '../components/FavoritesDrawer';
 import WhatsAppWidget from '../components/WhatsAppWidget';
 
@@ -46,26 +45,15 @@ const schemas = schema
   ? [organizationSchema, ...(Array.isArray(schema) ? schema : [schema])]
   : [organizationSchema];
 
-let countryCode = Astro.url.searchParams.get('country') || Astro.cookies.get('sumak-country-v2')?.value;
-if (countryCode !== 'EC' && countryCode !== 'US') {
-  try {
-    countryCode = getCountryCode(Astro.clientAddress, Astro.request.headers);
-  } catch (e) {
-    console.error('GeoIP error:', e);
-    countryCode = 'US';
-  }
-}
-if (countryCode === 'EC' || countryCode === 'US') {
-  Astro.cookies.set('sumak-country-v2', countryCode, { path: '/', maxAge: 31536000 });
-}
-
 const allProducts = (await getPublishedProducts(lang)).map((p) => ({
   id: p.id,
   slug: p.slug,
   name: p.translations[lang].name,
   category: p.category.label[lang],
   imageUrl: p.image.url,
-  price: countryCode === 'EC' ? p.priceEcuador : p.priceUSA,
+  price: p.priceEcuador || p.priceUSA,
+  priceEcuador: p.priceEcuador,
+  priceUSA: p.priceUSA,
 }));
 ---
 
@@ -97,25 +85,68 @@ const allProducts = (await getPublishedProducts(lang)).map((p) => ({
     {schemas.map((item) => <script is:inline type="application/ld+json" set:html={JSON.stringify(item)} />)}
     <script is:inline>
       (function() {
-        const getCookie = (name) => {
-          const value = `; ${document.cookie}`;
-          const parts = value.split(`; ${name}=`);
-          if (parts.length === 2) return parts.pop().split(';').shift();
-        };
-        
-        const urlParams = new URLSearchParams(window.location.search);
-        const countryParam = urlParams.get('country');
-        if (countryParam === 'EC' || countryParam === 'US') {
-          document.cookie = `sumak-country-v2=${countryParam}; path=/; max-age=31536000; SameSite=Lax`;
-          return;
+        function getSavedCountry() {
+          try {
+            var urlParams = new URLSearchParams(window.location.search);
+            var countryParam = urlParams.get('country');
+            if (countryParam) {
+              countryParam = countryParam.toUpperCase();
+              if (countryParam === 'EC' || countryParam === 'US') {
+                localStorage.setItem('sumak-country-v2', countryParam);
+                document.cookie = 'sumak-country-v2=' + countryParam + '; path=/; max-age=31536000; SameSite=Lax';
+                return countryParam;
+              }
+            }
+
+            var saved = localStorage.getItem('sumak-country-v2');
+            if (saved === 'EC' || saved === 'US') return saved;
+
+            var match = document.cookie.match(/(?:^|;\s*)sumak-country-v2=([^;]+)/);
+            if (match && (match[1] === 'EC' || match[1] === 'US')) return match[1];
+
+            var tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            var detected = (tz === 'America/Guayaquil' || tz === 'Pacific/Galapagos') ? 'EC' : 'US';
+            localStorage.setItem('sumak-country-v2', detected);
+            document.cookie = 'sumak-country-v2=' + detected + '; path=/; max-age=31536000; SameSite=Lax';
+            return detected;
+          } catch (e) {
+            return 'EC';
+          }
         }
 
-        if (!getCookie('sumak-country-v2')) {
-          const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-          const country = (tz === 'America/Guayaquil' || tz === 'Pacific/Galapagos') ? 'EC' : 'US';
-          document.cookie = `sumak-country-v2=${country}; path=/; max-age=31536000; SameSite=Lax`;
-          window.location.reload();
+        function applyPrices(country) {
+          window.__SUMAK_COUNTRY__ = country;
+          var els = document.querySelectorAll('.sumak-price-display');
+          for (var i = 0; i < els.length; i++) {
+            var el = els[i];
+            var ec = el.getAttribute('data-price-ec');
+            var us = el.getAttribute('data-price-us');
+            var val = country === 'EC' ? (ec || us) : (us || ec);
+            if (val && !isNaN(Number(val))) {
+              el.textContent = '$' + Number(val).toFixed(2) + ' USD';
+            }
+          }
+          window.dispatchEvent(new CustomEvent('sumak:country-changed', { detail: { country: country } }));
         }
+
+        var activeCountry = getSavedCountry();
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', function() {
+            applyPrices(activeCountry);
+          });
+        } else {
+          applyPrices(activeCountry);
+        }
+
+        window.setSumakCountry = function(c) {
+          if (c === 'EC' || c === 'US') {
+            try {
+              localStorage.setItem('sumak-country-v2', c);
+              document.cookie = 'sumak-country-v2=' + c + '; path=/; max-age=31536000; SameSite=Lax';
+            } catch (e) {}
+            applyPrices(c);
+          }
+        };
       })();
     </script>
   </head>

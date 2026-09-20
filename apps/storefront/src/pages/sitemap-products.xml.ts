@@ -2,7 +2,7 @@ import type { APIRoute } from 'astro';
 import { getPublishedProducts } from '../lib/catalog';
 
 // Se arma en cada petición: refleja lo que hay publicado ahora mismo.
-export const prerender = false;
+export const prerender = true;
 
 export const GET: APIRoute = async ({ site }) => {
   const [es, en] = await Promise.all([getPublishedProducts('es'), getPublishedProducts('en')]);
