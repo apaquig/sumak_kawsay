@@ -4,7 +4,7 @@ import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'astro/config';
 
 export default defineConfig({
-  site: process.env.PUBLIC_SITE_URL || 'http://localhost:4321',
+  site: process.env.PUBLIC_SITE_URL || 'https://sumakawsay.store',
   output: 'static',
   integrations: [react(), sitemap()],
   vite: {
