@@ -2,7 +2,7 @@ import type { Language } from './i18n';
 import type { Product, ProductTranslation, TranslationStatus } from '../data/products';
 import { products as fallbackProducts } from '../data/products';
 
-const API_URL = import.meta.env.API_URL || process.env.API_URL || 'http://localhost:4000';
+const API_URL = import.meta.env.API_URL || process.env.API_URL || (import.meta.env.DEV ? 'http://localhost:4000' : 'https://sumak-api.onrender.com');
 const TIMEOUT_MS = 5_000;
 
 /** Etiquetas de categoría. Mapeo para traducciones por defecto, con fallback para categorías dinámicas. */

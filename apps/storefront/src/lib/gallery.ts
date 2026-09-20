@@ -140,7 +140,7 @@ const FALLBACK_GALLERY: Record<Language, GalleryItem[]> = {
 };
 
 export async function getGalleryItems(lang: Language): Promise<GalleryItem[]> {
-  const apiUrl = import.meta.env.PUBLIC_API_URL || 'http://localhost:4000';
+  const apiUrl = import.meta.env.PUBLIC_API_URL || import.meta.env.API_URL || (import.meta.env.DEV ? 'http://localhost:4000' : 'https://sumak-api.onrender.com');
   try {
     const res = await fetch(`${apiUrl}/v1/gallery?lang=${lang}`, {
       headers: { Accept: 'application/json' },

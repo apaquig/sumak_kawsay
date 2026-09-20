@@ -45,7 +45,8 @@ export default function ContactForm({ lang }: ContactFormProps) {
     setResponseMsg('');
 
     try {
-      const apiBase = (typeof window !== 'undefined' && (window as any).__PUBLIC_API_URL__) || import.meta.env.PUBLIC_API_URL || 'http://localhost:4000';
+      const defaultApi = import.meta.env.DEV ? 'http://localhost:4000' : 'https://sumak-api.onrender.com';
+      const apiBase = (typeof window !== 'undefined' && (window as any).__PUBLIC_API_URL__) || import.meta.env.PUBLIC_API_URL || defaultApi;
       const res = await fetch(`${apiBase}/v1/contact`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
