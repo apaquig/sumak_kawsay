@@ -118,12 +118,26 @@ const cache = new Map<Language, { at: number; products: Product[] }>();
 const paginatedCache = new Map<string, { at: number; result: PaginatedProducts }>();
 const CACHE_MS = 60_000;
 
+import { getAtlasProducts, getAtlasCategories, getAtlasSettings } from './atlas';
+
 let warnedOffline = false;
 
 export async function getPublishedProducts(lang: Language): Promise<Product[]> {
   const cached = cache.get(lang);
   if (cached && Date.now() - cached.at < CACHE_MS) return cached.products;
 
+  // 1. Intentar conectar directamente a MongoDB Atlas (ideal para el build estático sin depender del servidor API)
+  try {
+    const atlasProducts = await getAtlasProducts(lang);
+    if (atlasProducts && atlasProducts.length > 0) {
+      cache.set(lang, { at: Date.now(), products: atlasProducts });
+      return atlasProducts;
+    }
+  } catch (atlasErr) {
+    console.warn('[catalogo] No se pudo cargar directo de MongoDB Atlas, probando API:', (atlasErr as Error)?.message || atlasErr);
+  }
+
+  // 2. Intentar API HTTP si está disponible
   try {
     const [prodResponse, catResponse] = await Promise.all([
       fetch(`${API_URL}/v1/catalog?lang=${lang}&limit=1000`, {
@@ -280,6 +294,14 @@ let cachedSettings: PublicSettings | null = null;
 export async function getPublicSettings(): Promise<PublicSettings> {
   if (cachedSettings) return cachedSettings;
   try {
+    const atlasSettings = await getAtlasSettings();
+    if (atlasSettings?.destinationEmail) {
+      cachedSettings = atlasSettings;
+      return cachedSettings;
+    }
+  } catch {}
+
+  try {
     const response = await fetch(`${API_URL}/v1/catalog/settings`, {
       headers: { Accept: 'application/json' },
       signal: AbortSignal.timeout(TIMEOUT_MS),
@@ -296,6 +318,11 @@ export async function getPublicSettings(): Promise<PublicSettings> {
 }
 
 export async function getCategories(lang: Language): Promise<[string, string][]> {
+  try {
+    const atlasCategories = await getAtlasCategories(lang);
+    if (atlasCategories && atlasCategories.length > 0) return atlasCategories;
+  } catch {}
+
   try {
     const response = await fetch(`${API_URL}/v1/catalog/categories`, {
       headers: { Accept: 'application/json' },

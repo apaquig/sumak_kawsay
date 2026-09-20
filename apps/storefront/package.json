@@ -23,6 +23,7 @@
     "@tensorflow/tfjs-core": "^4.22.0",
     "astro": "latest",
     "lucide-react": "latest",
+    "mongoose": "^9.10.1",
     "motion": "latest",
     "react": "latest",
     "react-dom": "latest",

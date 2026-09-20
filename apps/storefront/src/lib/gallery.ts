@@ -139,7 +139,20 @@ const FALLBACK_GALLERY: Record<Language, GalleryItem[]> = {
   ],
 };
 
+import { getAtlasGalleryItems } from './atlas';
+
 export async function getGalleryItems(lang: Language): Promise<GalleryItem[]> {
+  // 1. Intentar directo desde Atlas
+  try {
+    const atlasItems = await getAtlasGalleryItems(lang);
+    if (atlasItems && atlasItems.length > 0) {
+      return atlasItems;
+    }
+  } catch (atlasErr) {
+    console.warn('[galeria] No se pudo cargar directo de Atlas, probando API:', (atlasErr as Error)?.message || atlasErr);
+  }
+
+  // 2. Intentar API HTTP
   const apiUrl = import.meta.env.PUBLIC_API_URL || import.meta.env.API_URL || (import.meta.env.DEV ? 'http://localhost:4000' : 'https://sumak-api.onrender.com');
   try {
     const res = await fetch(`${apiUrl}/v1/gallery?lang=${lang}`, {
@@ -152,7 +165,7 @@ export async function getGalleryItems(lang: Language): Promise<GalleryItem[]> {
       }
     }
   } catch (e) {
-    console.warn('[galeria] API no disponible, se usa catálogo de respaldos de la base de datos:', e);
+    console.warn('[galeria] API no disponible, se usa catálogo de respaldos:', e);
   }
   return FALLBACK_GALLERY[lang] || FALLBACK_GALLERY.es;
 }
